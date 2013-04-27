@@ -33,7 +33,10 @@ first pass at mw.js. Then **mw-bootstrap.js** will be used to process **mw.md** 
 **mw.js** and **mw_test.js**.
 
 To generate **mw-bootstrap.js** I'm typing README.md in vi. I'm then using the write command
-to write the lines in the block describing **mw-bootstrap.js**
+to write the lines in the block describing **mw-bootstrap.js**. If you ran **mw-bootstrap.js**
+on this file you should generate **mw-bootstrap.js** itself.  The line immediately following
+the closing tripple quote is treated as the filename.
+
 
 ## mw.js
 
