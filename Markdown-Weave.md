@@ -55,7 +55,7 @@ Here's some test code for see if mw.js works. I'm using YUI3's test module to te
    * copyright (c) 2013 all rights reserved
    * Licensed under BSD 2-clause license. See http://opensource.org/licenses/BSD-2-Clause
    */
-  var YUI = require("yui"),
+  var YUI = require("yui").YUI,
       fs = require("fs"),
       mw = require("./mw");
   
