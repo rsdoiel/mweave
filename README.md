@@ -9,6 +9,7 @@ This is an experiment in exporing an of the ideas from  Donald Knuth's
 literate programming concept. This README.md is intended to work as a
 bootscript [mw-boostrap.js](mw-boostrap.js).
 
+[mw-bootstrap.js](mw-bootstrap.js)
 ```JavaScript
     /**
      * mw-bootstrap.js - an experiment in literate style programming in a 
@@ -20,48 +21,29 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
      
      var fs = require("fs");
 
-     lines = fs.readFileSync("README.md").toString().split("\n");
+     lines = fs.readFileSync("README.md").toString().split("\n"),
+        outputs = {};
 
-     lines.forEach(function (line) {
+     lines.forEach(function (line, i) {
+        var check, target;
+        check = trim(line);
+        if (i < lines.length - 2 &&
+            lines[i + 1].indexOf(```) === 0 &&
+            check[0] === '[' && check[check.length - 1] === ')') {
+            filename = line.substr(chech.lastIndexOf('(') + 1, -1);
+            console.log("Writing " + filename);
+        }
      });
 
 ```
-mw-bootstrap.js
 
 Above is the bootstrap code.  To "bootstrap" I'm using vi's write lines command to generate the
-first pass at mw.js. Then **mw-bootstrap.js** will be used to process **mw.md** and generate 
-**mw.js** and **mw_test.js**.
+the first instance of **mw-bootstrap.js**. Then **mw-bootstrap.js** will be used to process
+**README.md** and generate subsequent versions. To discover the filename to write to I'm 
+looking at the line immediately before the tripple quotes and if there is one item in square
+brackets (e.g. [mw-bootstrap.js]) then I assume that is the filename. If there is a blank line
+before the tripple quotes then I don't write that quoted block out.
 
-To generate **mw-bootstrap.js** I'm typing README.md in vi. I'm then using the write command
-to write the lines in the block describing **mw-bootstrap.js**. If you ran **mw-bootstrap.js**
-on this file you should generate **mw-bootstrap.js** itself.  The line immediately following
-the closing tripple quote is treated as the filename.
-
-
-## mw.js
-
-mw.js is intended to be the actual Markdown Weave experiment. You should be able to run
-commands like
-
-```shell
-    node mw.js ExampleMW-1.md
-```
-
-and render all the code described in ExampleMW-1.md independant of the text.  This is accomplished
-through overloading the "```" (i.e. open tripple quote) operator in Markdown. In github flavored
-markdown the text following an opening tripple quote descripts the specific language flavor be
-quoted (e.g. javascript, shell, python). Markdown Weave is using the closing tripple quote
-for a filename to output to. If closing tripple quotes have no filename nothing is written
-to disc. Each additional time a previously referenced filename is encountered the contents
-are appended and all files collected are written to disc when the Markdown text has completed
-evaluation.  This allows you to have blocks of markdown text discussing sections of the source
-code while still generating the whole source code file in the end. Eventually a source map will
-be generated so you know where in your markdown source to fix when you encounter an error.
-
-
-## testing
-
-I am using YUI3's test module.
 
 ## Node package.json
 
