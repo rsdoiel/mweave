@@ -19,6 +19,30 @@ Here's the command which I plan to used to build _mw.js_ -
 
 ## mw.js
 
+Ok, so here we go. Let's see if I can implement _mw.js_ from _mw-bootstrap.js_.
+
+[mw.js](mw.js)
+```JavaScript
+  /**
+   * mw.js - Markdown Weave, an exploration in Markdown using Donald
+   * Knuth's literate programming concepts.
+   * @author R. S. Doiel, <rsdoiel@gmail.com>
+   */
+  /*jslint indent: 4 */
+  /*global exports */
+  function Weave () {
+    return {
+      parse: function () {
+        throw "Weave.parse() not implemented.";
+      }
+    };
+  }
+  
+  if (typeof exports !== "undefined") {
+    exports.Weave = Weave;
+  }
+```
+
 ## mw_test.js
 
 Here's some test code for see if mw.js works. I'm using YUI3's test module to test ms.js.
