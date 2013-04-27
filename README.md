@@ -43,7 +43,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
             output[filename] = {start: i + 1, end: -1};
         } 
         if (typeof output[filename] !== "undefined" &&
-            output[filename].end < 0 **
+            output[filename].end < 0 &&
             line.indexOf("```") === 0) {
             output[filename].end = i;
         }
