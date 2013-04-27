@@ -1,4 +1,3 @@
-
 # Markdown Weave
 
 Is an experiment in Donald Knuth's literarte programming ideas.  This version assumes the markup syntax
@@ -24,6 +23,7 @@ Here's the command which I plan to used to build _mw.js_ -
 
 Here's some test code for see if mw.js works. I'm using YUI3's test module to test ms.js.
 
+[mw_test.js](mw_test.js)
 ```JavaScript
   /**
    * mw_test.js - Test code for mw.js which was generated via mw-bootstrap.js.
