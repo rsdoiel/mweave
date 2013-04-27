@@ -48,8 +48,8 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
             outputs[filename].end = i;
         }
      };
-     Object.keys(output).forEach(function (ky) {
-        console.log("vi -e -c '" + output[ky].start + "," + output[ky].end + " wq! " + ky);
+     Object.keys(outputs).forEach(function (ky) {
+        console.log("vi -e -c '" + outputs[ky].start + "," + outputs[ky].end + " wq! " + ky);
      });
 ```
 
