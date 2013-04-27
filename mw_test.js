@@ -25,8 +25,11 @@
           Y.Assert.isObject(results);
           Y.Assert.isObject(results["mw.js"]);
           Y.Assert.isObject(results["mw.js"][0]);
-          Y.Assert.areSame(34, results["mw.js"][0].start);
-          Y.Assert.areSame(79, results["mw.js"][0].end);
+          Y.Assert.areSame(46, results["mw.js"][0].start);
+          Y.Assert.areSame(94, results["mw.js"][0].end);
+      },
+      "Should take an object from parse() and render the related text into a new object.": function () {
+         throw "Not implemented."; 
       }
     });
     

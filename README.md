@@ -80,37 +80,9 @@ Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
     vi -e -c "20,67wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
 ```
 
+# Further reading
 
-## Node package.json
-
-```JavaScript
-    {
-      "name": "markdown-weave",
-      "version": "0.0.0",
-      "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
-      "main": "mw.js",
-      "scripts": {
-        "test": "mw_test.js"
-      },
-      "devDependencies": {
-          "yuitest"
-      },
-      "dependencies": {
-          "yui": "3.10.x"
-      },
-      "repository": {
-        "type": "git",
-        "url": "git@github.com:rsdoiel/markdown-weave.git"
-      },
-      "keywords": [
-        "markdown",
-        "weave"
-      ],
-      "author": "R. S. Doiel",
-      "license": "BSD",
-      "readmeFilename": "README.md"
-    }
-```
-package.json
+* [Markdown-Weave.md](Markdown-Weave.md) is the source to _mw.js_. Since this is process by _mw-bootstrap.js_ it's not quiet literate yet.
+* [Misc.md](Misc.md) is the source to generate miscellaneous files like _package.json_ used by npm.
 
 

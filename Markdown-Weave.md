@@ -2,13 +2,25 @@
 
 This is an experiment in [literarte programming](http://en.wikipedia.org/wiki/Literate_programming)
 using Markdown as the markup language.  Literate programming is a concept instroduced by
-[Donald Knuth](http://www.literateprogramming.com/).  This experiment does not attempt to re-create
-the macro system that is available in CWEB.  This implementation limits itself to Markdown syntax
-as it exists today on Github.com.  I have adopted one additional idea which is a link immediately 
-preceeding a tripple quote block will be considered the filename of the resulting source code.  If
-the filename is encountered more than once mw.js should concatenate that with previous code 
-associated with the filename. This exception is this specific file since it is intended to be run
-by _mw-bootstrap.js_.
+[Donald Knuth](http://www.literateprogramming.com/) way back when. This experiment would probably
+not meet with his criteria.  Instead it is focusing on using things that are readily available
+in a way that can achieve some of the same effect. This would supplement the output of systems
+auto documentation systems like yuidoc, javaDocs, doxygen by providing a context round the whole project code.
+
+My experiment differs from Literate Programming definition in a couple of ways
+
+* No Macro language
+* Order of explanation DOES reflect the output of the files you generate
+* It is not based on a typesetting language but a web/email shorthand (e.g. Markdown)
+* The rendered document includes the code examples as "code" blocks
+* The render program includes any embedded commments as they were in the code blocks from the source file
+* Markdown-Weave is intended not as a complete system but another helper tool doing a simple task
+
+My requirements
+
+* Markdown should work as it always does
+* The code generated should look like the code in the original document just out-dented by 4 spaces
+* I should be able to use this approach to bootstrap a better Markdown-Weave tool
 
 
 ## Running mw-bootstrap.js on Markdown-Weaver.md
@@ -38,7 +50,7 @@ Array) of start and end line numbers to use in constructing the target file.
    */
   /*jslint indent: 4 */
   /*global exports */
-  function Weave () {
+  function Weave() {
     return {
       parse: function (source) {
         var lines = source.split("\n"),
@@ -70,6 +82,9 @@ Array) of start and end line numbers to use in constructing the target file.
             }
         };
         return outputs;
+      },
+      render: function (markdown_source, parsed_results) {
+          throw "stringify() is not implemented yet.";
       }
     };
   }
@@ -112,8 +127,11 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
           Y.Assert.isObject(results);
           Y.Assert.isObject(results["mw.js"]);
           Y.Assert.isObject(results["mw.js"][0]);
-          Y.Assert.areSame(34, results["mw.js"][0].start);
-          Y.Assert.areSame(79, results["mw.js"][0].end);
+          Y.Assert.areSame(46, results["mw.js"][0].start);
+          Y.Assert.areSame(94, results["mw.js"][0].end);
+      },
+      "Should take an object from parse() and render the related text into a new object.": function () {
+         throw "Not implemented."; 
       }
     });
     

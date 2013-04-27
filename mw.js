@@ -5,7 +5,7 @@
    */
   /*jslint indent: 4 */
   /*global exports */
-  function Weave () {
+  function Weave() {
     return {
       parse: function (source) {
         var lines = source.split("\n"),
@@ -37,6 +37,9 @@
             }
         };
         return outputs;
+      },
+      render: function (markdown_source, parsed_results) {
+          throw "stringify() is not implemented yet.";
       }
     };
   }
