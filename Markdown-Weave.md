@@ -42,7 +42,7 @@ Here's some test code for see if mw.js works. I'm using YUI3's test module to te
     var testCase;
     
     testCase = new Y.Test.Case({
-      "Simple testing for mw.js",
+      name: "Simple testing for mw.js",
       "Should parse Markdown-Weave.md and yeild an object with what to write to disc": function () {
         var weave = new mw.Weave(),
           source = fs.readFileSync("Markdown-Weave.md"),
