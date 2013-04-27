@@ -37,12 +37,18 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
 
 ```
 
-Above is the bootstrap code.  To "bootstrap" I'm using vi's write lines command to generate the
+Above is the bootstrap code.  To "bootstrap" I'm using _ex_'s write lines command to generate the
 the first instance of **mw-bootstrap.js**. Then **mw-bootstrap.js** will be used to process
 **README.md** and generate subsequent versions. To discover the filename to write to I'm 
-looking at the line immediately before the tripple quotes and if there is one item in square
-brackets (e.g. [mw-bootstrap.js]) then I assume that is the filename. If there is a blank line
-before the tripple quotes then I don't write that quoted block out.
+looking at the line immediately before the tripple quotes and if there is a line then I assume
+the link target is the desired filename.  If there is a blank line before the tripple quotes then
+I don't write that quoted block out.
+
+Here's the _ex_ command to generate **mw-bootstrap.js** the first time.
+
+```Shell
+    ex -c "14,37w mw-bootstrap.js" -c "q" README.md
+```
 
 
 ## Node package.json
