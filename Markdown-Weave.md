@@ -1,12 +1,15 @@
 # Markdown Weave
 
-This is an experiment in literarte programming concepts describe by
-[Donald Knuth](http://www.literateprogramming.com/).  This implementation assumes the markup
-syntax is valid Markdown such as that used on Github.  I have adopted one additional 
-idea which is a link immediately preceeding a tripple quote block will be considered the
-filename of the resulting source code.  If the filename is encountered more than once mw.js
-should concatenate that with previous code associated with the filename. This exception is
-this specific file since it is intended to be run by _mw-bootstrap.js_.
+This is an experiment in [literarte programming](http://en.wikipedia.org/wiki/Literate_programming)
+using Markdown as the markup language.  Literate programming is a concept instroduced by
+[Donald Knuth](http://www.literateprogramming.com/).  This experiment does not attempt to re-create
+the macro system that is available in CWEB.  This implementation limits itself to Markdown syntax
+as it exists today on Github.com.  I have adopted one additional idea which is a link immediately 
+preceeding a tripple quote block will be considered the filename of the resulting source code.  If
+the filename is encountered more than once mw.js should concatenate that with previous code 
+associated with the filename. This exception is this specific file since it is intended to be run
+by _mw-bootstrap.js_.
+
 
 ## Running mw-bootstrap.js on Markdown-Weaver.md
 
@@ -109,8 +112,8 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
           Y.Assert.isObject(results);
           Y.Assert.isObject(results["mw.js"]);
           Y.Assert.isObject(results["mw.js"][0]);
-          Y.Assert.areSame(31, results["mw.js"][0].start);
-          Y.Assert.areSame(76, results["mw.js"][0].end);
+          Y.Assert.areSame(34, results["mw.js"][0].start);
+          Y.Assert.areSame(79, results["mw.js"][0].end);
       }
     });
     
