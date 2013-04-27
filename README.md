@@ -21,24 +21,36 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
      
      var fs = require("fs"),
         lines = fs.readFileSync("README.md").toString().split("\n"),
+        line = "",
+        check = "",
         outputs = {},
+        i = 0,
         filename,
         start = 0,
         end = 0;
 
-     lines.forEach(function (line, i) {
-        var check;
+     for (i = 0; i < lines.length; i += 1) {
+        line = lines[i];
         check = line.trim();
         if (i < lines.length - 2 &&
             lines[i + 1].indexOf("```") === 0 &&
             check[0] === '[' && check[check.length - 1] === ')') {
+            i += 1;
             start = check.lastIndexOf('(') + 1;
             end = check.lastIndexOf(')');
             filename = line.substr(start, end - start);
-            console.log("Writing " + filename);
+            console.log("Filename: " + filename);
+            output[filename] = {start: i + 1, end: -1};
+        } 
+        if (typeof output[filename] !== "undefined" &&
+            output[filename].end < 0 **
+            line.indexOf("```") === 0) {
+            output[filename].end = i;
         }
+     };
+     Object.keys(output).forEach(function (ky) {
+        console.log("vi -e -c '" + output[ky].start + "," + output[ky].end + " wq! " + ky);
      });
-
 ```
 
 Above is the bootstrap code.  To "bootstrap" I'm using _ex_'s write lines command to generate the
@@ -51,7 +63,7 @@ I don't write that quoted block out.
 Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
 
 ```Shell
-    vi -e -c "14,41wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
+    vi -e -c "14,53wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
 ```
 
 
