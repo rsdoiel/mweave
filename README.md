@@ -40,12 +40,12 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
             end = check.lastIndexOf(')');
             filename = line.substr(start, end - start);
             console.log("Filename: " + filename);
-            output[filename] = {start: i + 1, end: -1};
+            outputs[filename] = {start: i + 1, end: -1};
         } 
-        if (typeof output[filename] !== "undefined" &&
-            output[filename].end < 0 &&
+        if (typeof outputs[filename] !== "undefined" &&
+            outputs[filename].end < 0 &&
             line.indexOf("```") === 0) {
-            output[filename].end = i;
+            outputs[filename].end = i;
         }
      };
      Object.keys(output).forEach(function (ky) {
