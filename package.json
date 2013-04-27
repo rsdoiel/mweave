@@ -1,0 +1,20 @@
+{
+  "name": "MarkdownWeave",
+  "version": "0.0.0",
+  "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
+  "main": "mw.js",
+  "scripts": {
+    "test": "mw_test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rsdoiel/markdown-weave.git"
+  },
+  "keywords": [
+    "markdown",
+    "weave"
+  ],
+  "author": "R. S. Doiel",
+  "license": "BSD",
+  "readmeFilename": "README.md"
+}
