@@ -25,7 +25,8 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
      lines.forEach(function (line) {
      });
 
-```mw-bootstrap.js
+```
+mw-bootstrap.js
 
 Above is the bootstrap code.  To "bootstrap" I'm using vi's write lines command to generate the
 first pass at mw.js. Then **mw-bootstrap.js** will be used to process **mw.md** and generate 
@@ -55,11 +56,9 @@ code while still generating the whole source code file in the end. Eventually a 
 be generated so you know where in your markdown source to fix when you encounter an error.
 
 
-
-
 ## testing
 
-I am using YUI3's test module. Like _mw.js_ I'm 
+I am using YUI3's test module.
 
 ## Node package.json
 
@@ -71,6 +70,12 @@ I am using YUI3's test module. Like _mw.js_ I'm
       "main": "mw.js",
       "scripts": {
         "test": "mw_test.js"
+      },
+      "devDependencies": {
+          "yuitest"
+      },
+      "dependencies": {
+          "yui": "3.10.x"
       },
       "repository": {
         "type": "git",
@@ -84,5 +89,7 @@ I am using YUI3's test module. Like _mw.js_ I'm
       "license": "BSD",
       "readmeFilename": "README.md"
     }
-```package.json
+```
+package.json
+
 
