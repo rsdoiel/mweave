@@ -8,11 +8,10 @@ An experiment in using Markdown and Donald Knuth's literate programming concept.
 
 ## Bootstraping mw.js
 
-I like the idea of writing _mw.js_ using _mw.js_.  To do that I a very simple implementation
-of _mv.js_ which I'm calling _mw-bootstrap.js_.  That's the proof concept below. I'm
-leveraging Markdown syntax, JavaScript to generate the _vi_ commands to extract
-the code. The core to actually generate _mw.js_ itself will be in a markdown file
-name [Markdown-Weave.md](Markdown-Weave.md).
+I like the idea of writing _mw.js_ using _mw.js_.  To do that I wrote a very simple implementation
+of _mv.js_ which I'm calling _mw-bootstrap.js_.  I'm leveraging Markdown syntax via JavaScript to 
+generate the _vi_ commands to extract the code. The source for _mw.js_ will be generate by running
+_mw-bootstrap.js_ on [Markdown-Weave.md](Markdown-Weave.md).
 
 Here's code to bootstrap this whole thing-
 
@@ -78,7 +77,7 @@ I don't write that quoted block out.
 Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
 
 ```Shell
-    vi -e -c "21,68wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
+    vi -e -c "20,67wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
 ```
 
 
