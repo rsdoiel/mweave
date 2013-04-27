@@ -45,7 +45,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
         if (typeof outputs[filename] !== "undefined" &&
             outputs[filename].end < 0 &&
             line.indexOf("```") === 0) {
-            outputs[filename].end = i;
+            outputs[filename].end = i - 1;
         }
      };
      Object.keys(outputs).forEach(function (ky) {
