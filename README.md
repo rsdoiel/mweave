@@ -22,7 +22,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
      var fs = require("fs");
 
      lines = fs.readFileSync("README.md").toString().split("\n"),
-        outputs = {};
+        outputs = {}, filename;
 
      lines.forEach(function (line, i) {
         var check, target;
@@ -30,7 +30,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
         if (i < lines.length - 2 &&
             lines[i + 1].indexOf("```") === 0 &&
             check[0] === '[' && check[check.length - 1] === ')') {
-            filename = line.substr(chech.lastIndexOf('(') + 1, -1);
+            filename = line.substr(check.lastIndexOf('(') + 1, check.length - 2);
             console.log("Writing " + filename);
         }
      });
@@ -44,10 +44,10 @@ looking at the line immediately before the tripple quotes and if there is a line
 the link target is the desired filename.  If there is a blank line before the tripple quotes then
 I don't write that quoted block out.
 
-Here's the _ex_ command to generate **mw-bootstrap.js** the first time.
+Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
 
 ```Shell
-    ex -c "14,37w mw-bootstrap.js" -c "q" README.md
+    vi -e -c "14,37wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
 ```
 
 
