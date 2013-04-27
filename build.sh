@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 echo "This is a shell script executing the commands to bootstrap mw.js"
 #echo "Gragging source from origin master"
 #git pull origin master
