@@ -28,7 +28,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
         var check, target;
         check = trim(line);
         if (i < lines.length - 2 &&
-            lines[i + 1].indexOf(```) === 0 &&
+            lines[i + 1].indexOf("```") === 0 &&
             check[0] === '[' && check[check.length - 1] === ')') {
             filename = line.substr(chech.lastIndexOf('(') + 1, -1);
             console.log("Writing " + filename);
