@@ -1,6 +1,8 @@
 Markdown Weave
 ==============
 
+An experiment in using Markdown and Donald Knuth's literate programming concept.
+
 # What is mw.js?
 
 This is an experiment in exporing an of the ideas from  Donald Knuth's 
@@ -83,3 +85,4 @@ I am using YUI3's test module. Like _mw.js_ I'm
       "readmeFilename": "README.md"
     }
 ```package.json
+
