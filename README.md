@@ -19,10 +19,10 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
      * Licensed under the BSD 2-clause license. See http://opensource.org/licenses/BSD-2-Clause
      */
      
-     var fs = require("fs");
-
-     lines = fs.readFileSync("README.md").toString().split("\n"),
-        outputs = {}, filename;
+     var fs = require("fs"),
+        lines = fs.readFileSync("README.md").toString().split("\n"),
+        outputs = {},
+        filename;
 
      lines.forEach(function (line, i) {
         var check, target;
