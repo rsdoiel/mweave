@@ -33,7 +33,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
      if (process.argv.length === 3) {
         markdownFilename = process.argv[2];
      }
-     lines = fs.readFileSync(markdownFilename).toString().split("\n"),
+     lines = fs.readFileSync(markdownFilename).toString().split("\n");
      for (i = 0; i < lines.length; i += 1) {
         line = lines[i];
         check = line.trim();
