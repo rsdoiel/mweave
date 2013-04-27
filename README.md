@@ -26,7 +26,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
 
      lines.forEach(function (line, i) {
         var check, target;
-        check = trim(line);
+        check = line.trim();
         if (i < lines.length - 2 &&
             lines[i + 1].indexOf("```") === 0 &&
             check[0] === '[' && check[check.length - 1] === ')') {
