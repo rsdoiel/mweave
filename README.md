@@ -22,7 +22,9 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
      var fs = require("fs"),
         lines = fs.readFileSync("README.md").toString().split("\n"),
         outputs = {},
-        filename;
+        filename,
+        start = 0,
+        end = 0;
 
      lines.forEach(function (line, i) {
         var check, target;
@@ -30,7 +32,9 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
         if (i < lines.length - 2 &&
             lines[i + 1].indexOf("```") === 0 &&
             check[0] === '[' && check[check.length - 1] === ')') {
-            filename = line.substr(check.lastIndexOf('(') + 1, check.length - 2);
+            start = check.lastIndexOf('(') + 1;
+            end = check.length - 3;
+            filename = line.substr(start, end - start);
             console.log("Writing " + filename);
         }
      });
@@ -47,7 +51,7 @@ I don't write that quoted block out.
 Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
 
 ```Shell
-    vi -e -c "14,37wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
+    vi -e -c "14,41wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
 ```
 
 
