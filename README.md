@@ -1,13 +1,20 @@
 Markdown Weave
 ==============
 
-An experiment in using Markdown and Donald Knuth's literate programming concept.
-
 # What is mw.js?
 
-This is an experiment in exporing an of the ideas from  Donald Knuth's 
-literate programming concept. This README.md is intended to work as a
-bootscript [mw-boostrap.js](mw-boostrap.js).
+An experiment in using Markdown and Donald Knuth's literate programming concept.
+
+
+## Bootstraping mw.js
+
+I like the idea of writing _mw.js_ using _mw.js_.  To do that I a very simple implementation
+of _mv.js_ which I'm calling _mw-bootstrap.js_.  That's the proof concept below. I'm
+leveraging Markdown syntax, JavaScript to generate the _vi_ commands to extract
+the code. The core to actually generate _mw.js_ itself will be in a markdown file
+name [Markdown-Weave.md](Markdown-Weave.md).
+
+Here's code to bootstrap this whole thing-
 
 [mw-bootstrap.js](mw-bootstrap.js)
 ```JavaScript
@@ -44,7 +51,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
             start = check.lastIndexOf('(') + 1;
             end = check.lastIndexOf(')');
             filename = line.substr(start, end - start);
-            console.log("Filename: " + filename);
+            console.log("# Output Filename: " + filename);
             outputs[filename] = {start: i + 1, end: -1};
         } else if (typeof outputs[filename] !== "undefined" &&
             outputs[filename].end < 0 &&
@@ -54,6 +61,7 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
         }
      };
      Object.keys(outputs).forEach(function (ky) {
+        console.log("# This vi command to generate the code for " + ky);
         console.log("vi -e -c '" + outputs[ky].start + "," + outputs[ky].end + " wq! " + ky + "' " +
             markdownFilename);
      });
@@ -70,7 +78,7 @@ I don't write that quoted block out.
 Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
 
 ```Shell
-    vi -e -c "14,60wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
+    vi -e -c "21,68wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
 ```
 
 
