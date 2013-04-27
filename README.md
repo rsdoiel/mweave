@@ -27,13 +27,13 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
         end = 0;
 
      lines.forEach(function (line, i) {
-        var check, target;
+        var check;
         check = line.trim();
         if (i < lines.length - 2 &&
             lines[i + 1].indexOf("```") === 0 &&
             check[0] === '[' && check[check.length - 1] === ')') {
             start = check.lastIndexOf('(') + 1;
-            end = check.length - 3;
+            end = check.lastIndexOf(')');
             filename = line.substr(start, end - start);
             console.log("Writing " + filename);
         }
