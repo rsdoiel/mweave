@@ -28,11 +28,11 @@ bootscript [mw-boostrap.js](mw-boostrap.js).
 ```mw-bootstrap.js
 
 Above is the bootstrap code.  To "bootstrap" I'm using vi's write lines command to generate the
-first pass at mw.js. Then @mw-bootstrap.js@ will be used to process @mw.md@ and generate 
-@mw.js@ and @mw_test.js@.
+first pass at mw.js. Then **mw-bootstrap.js** will be used to process **mw.md** and generate 
+**mw.js** and **mw_test.js**.
 
-To generate @mw-bootstrap.js@ I'm typing README.md in vi. I'm then using the write command
-to write the lines in the block describing @mw-bootstrap.js@.
+To generate **mw-bootstrap.js** I'm typing README.md in vi. I'm then using the write command
+to write the lines in the block describing **mw-bootstrap.js**
 
 ## mw.js
 
