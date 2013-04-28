@@ -98,6 +98,11 @@ _reboot.sh_ does the following things.
         echo "Missing mw_test.js, something went wrong."
         exit 1
     fi
+
+    if [ -f "cli.js" ] && [ -f "HelloWorld.md" ]; then
+        node cli.js HelloWorld.md
+        node test_helloworld.js
+    fi
 ```
 
 If Markdown-Weave.md was going to be run with _ms.js_ then I would have created the above
@@ -138,6 +143,8 @@ processing to be written out to disc.
                 var lines = source.split("\n"),
                     filename = null,
                     outputs = {},
+                    start_cut = 0,
+                    end_cut= 0,
                     i = 0,
                     j = 0;
 
@@ -147,14 +154,17 @@ processing to be written out to disc.
                     if (i < lines.length - 2 &&
                             lines[i + 1].indexOf("```") === 0 &&
                             check[0] === '[' && check[check.length - 1] === ')') {
+                        // Now skip ahead to lines of actual code.
                         i += 2;
-                        start = check.lastIndexOf('(') + 1;
-                        end = check.lastIndexOf(')');
-                        filename = line.substr(start, end - start);
+                        start_cut = check.lastIndexOf('(') + 1;
+                        end_cut = check.lastIndexOf(')');
+                        filename = line.substr(start_cut, end_cut - start_cut);
                         if (typeof outputs[filename] === "undefined") {
                             outputs[filename] = [];
                         }
-                        outputs[filename].push({start: i, end: -1});
+                        // I am storing line numbers, not index into lines.
+                        // Start and End points are inclusive.
+                        outputs[filename].push({start: i + 1, end: -1});
                     } else if (filename !== null && line.indexOf("```") === 0) {
                         /* Find the last entry and add the end point */
                         j = outputs[filename].length - 1;
@@ -172,15 +182,19 @@ processing to be written out to disc.
                 function catSource(points) {
                     var output = [];
                     points.forEach(function (point) {
-                        var i, start, end;
-                        start = point.start;
-                        end = point.end;
-                        console.log("DEBUG start, end", start, end);
-                        console.log("DEBUG before", lines[start-1]);
-                        console.log("DEBUG target", lines[start]);
-                        console.log("DEBUG after", lines[start+1]);
+                        var i, start, end, outdent = 4;
+                        // Convert from line numbers to array index
+                        start = point.start - 1;
+                        end = point.end - 1;
+                        // end is inclusive.
                         for (i = start; i <= end && i < lines.length; i += 1) {
-                            output.push(lines[i].substr(4));
+                            outdent = 0;
+                            if (lines[i].indexOf("    ") === 0) {
+                                outdent = 4;
+                            } else if (lines[start].indexOf("\t") === 0) {
+                                outdent = 1;
+                            }
+                            output.push(lines[i].substr(outdent));
                         }
                     });
                     return output.join("\n");
@@ -233,8 +247,9 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
                 Y.Assert.isObject(results);
                 Y.Assert.isObject(results["mw.js"]);
                 Y.Assert.isObject(results["mw.js"][0]);
-                Y.Assert.areSame(128, results["mw.js"][0].start);
-                Y.Assert.areSame(199, results["mw.js"][0].end);
+                // Remember array of lines cound from zero. End is inclusive.
+                Y.Assert.areSame(133, results["mw.js"][0].start);
+                Y.Assert.areSame(213, results["mw.js"][0].end);
 
                 // Now try running on HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
@@ -250,17 +265,15 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
                     obj = weave.parse(source),
                     results = weave.render(source, obj);
 
-                //Y.log(obj, "debug");
-                //Y.log(results, "debug");
                 Y.assert(source.length > 0, "Should have some markdown source");
                 Y.Assert.isObject(obj["cli.js"]);
-                Y.assert(obj["cli.js"].start > 0);
-                Y.assert(obj["cli.js"].end > 0);
+                Y.assert(obj["cli.js"][0].start > 0);
+                Y.assert(obj["cli.js"][0].end > 0);
 
-                Y.Assert.isObect(results);
+                Y.Assert.isObject(results);
                 Y.Assert.isString(results["cli.js"]);
 
-                // Now let's test our simple HelloWorld.md
+                // Now test our simple HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
                 obj = weave.parse(source);
                 results = weave.render(source, obj);

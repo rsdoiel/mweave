@@ -11,6 +11,8 @@
                 var lines = source.split("\n"),
                     filename = null,
                     outputs = {},
+                    start_cut = 0,
+                    end_cut= 0,
                     i = 0,
                     j = 0;
 
@@ -20,14 +22,17 @@
                     if (i < lines.length - 2 &&
                             lines[i + 1].indexOf("```") === 0 &&
                             check[0] === '[' && check[check.length - 1] === ')') {
+                        // Now skip ahead to lines of actual code.
                         i += 2;
-                        start = check.lastIndexOf('(') + 1;
-                        end = check.lastIndexOf(')');
-                        filename = line.substr(start, end - start);
+                        start_cut = check.lastIndexOf('(') + 1;
+                        end_cut = check.lastIndexOf(')');
+                        filename = line.substr(start_cut, end_cut - start_cut);
                         if (typeof outputs[filename] === "undefined") {
                             outputs[filename] = [];
                         }
-                        outputs[filename].push({start: i, end: -1});
+                        // I am storing line numbers, not index into lines.
+                        // Start and End points are inclusive.
+                        outputs[filename].push({start: i + 1, end: -1});
                     } else if (filename !== null && line.indexOf("```") === 0) {
                         /* Find the last entry and add the end point */
                         j = outputs[filename].length - 1;
@@ -45,15 +50,19 @@
                 function catSource(points) {
                     var output = [];
                     points.forEach(function (point) {
-                        var i, start, end;
-                        start = point.start;
-                        end = point.end;
-                        console.log("DEBUG start, end", start, end);
-                        console.log("DEBUG before", lines[start-1]);
-                        console.log("DEBUG target", lines[start]);
-                        console.log("DEBUG after", lines[start+1]);
+                        var i, start, end, outdent = 4;
+                        // Convert from line numbers to array index
+                        start = point.start - 1;
+                        end = point.end - 1;
+                        // end is inclusive.
                         for (i = start; i <= end && i < lines.length; i += 1) {
-                            output.push(lines[i].substr(4));
+                            outdent = 0;
+                            if (lines[i].indexOf("    ") === 0) {
+                                outdent = 4;
+                            } else if (lines[start].indexOf("\t") === 0) {
+                                outdent = 1;
+                            }
+                            output.push(lines[i].substr(outdent));
                         }
                     });
                     return output.join("\n");

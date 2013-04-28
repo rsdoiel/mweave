@@ -26,8 +26,9 @@
                 Y.Assert.isObject(results);
                 Y.Assert.isObject(results["mw.js"]);
                 Y.Assert.isObject(results["mw.js"][0]);
-                Y.Assert.areSame(128, results["mw.js"][0].start);
-                Y.Assert.areSame(199, results["mw.js"][0].end);
+                // Remember array of lines cound from zero. End is inclusive.
+                Y.Assert.areSame(133, results["mw.js"][0].start);
+                Y.Assert.areSame(213, results["mw.js"][0].end);
 
                 // Now try running on HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
@@ -43,17 +44,15 @@
                     obj = weave.parse(source),
                     results = weave.render(source, obj);
 
-                //Y.log(obj, "debug");
-                //Y.log(results, "debug");
                 Y.assert(source.length > 0, "Should have some markdown source");
                 Y.Assert.isObject(obj["cli.js"]);
-                Y.assert(obj["cli.js"].start > 0);
-                Y.assert(obj["cli.js"].end > 0);
+                Y.assert(obj["cli.js"][0].start > 0);
+                Y.assert(obj["cli.js"][0].end > 0);
 
-                Y.Assert.isObect(results);
+                Y.Assert.isObject(results);
                 Y.Assert.isString(results["cli.js"]);
 
-                // Now let's test our simple HelloWorld.md
+                // Now test our simple HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
                 obj = weave.parse(source);
                 results = weave.render(source, obj);

@@ -27,3 +27,8 @@
         echo "Missing mw_test.js, something went wrong."
         exit 1
     fi
+
+    if [ -f "cli.js" ] && [ -f "HelloWorld.md" ]; then
+        node cli.js HelloWorld.md
+        node test_helloworld.js
+    fi
