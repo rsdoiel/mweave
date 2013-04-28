@@ -375,11 +375,11 @@ The command line tool provides the bindings to file IO and processing of command
             "test": "mw_test.js"
         },
         "devDependencies": {
+            "yui": "3.10.x",
             "yuitest": "0.7.x"
         },
         "dependencies": {
-            "opt": "0.1.x",
-            "yui": "3.10.x"
+            "opt": "0.1.x"
         },
         "repository": {
             "type": "git",

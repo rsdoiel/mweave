@@ -1,7 +1,7 @@
 {
-    "name": "markdown-weave",
+    "name": "mweave",
     "version": "0.0.0",
-    "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
+    "description": "This is an experiment in using Markdown and some concepts from literate programming.",
     "main": "mw.js",
     "bin": {
         "mweave": "./cli.js"
@@ -10,11 +10,11 @@
         "test": "mw_test.js"
     },
     "devDependencies": {
+        "yui": "3.10.x",
         "yuitest": "0.7.x"
     },
     "dependencies": {
-        "opt": "0.1.x",
-        "yui": "3.10.x"
+        "opt": "0.1.x"
     },
     "repository": {
         "type": "git",
