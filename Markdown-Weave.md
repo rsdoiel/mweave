@@ -125,77 +125,78 @@ processing to be written out to disc.
 
 [mw.js](mw.js)
 ```JavaScript
-  /**
-   * mw.js - Markdown Weave, an exploration in Markdown using 
-   * literate programming concepts.
-   * @author R. S. Doiel, <rsdoiel@gmail.com>
-   */
-  /*jslint indent: 4 */
-  /*global exports */
-  function Weave() {
-    return {
-      parse: function (source) {
-        var lines = source.split("\n"),
-            filename = null,
-            outputs = {},
-            i = 0,
-            j = 0;
+    /**
+     * mw.js - Markdown Weave, an exploration in Markdown using 
+     * literate programming concepts.
+     * @author R. S. Doiel, <rsdoiel@gmail.com>
+     */
+    /*jslint indent: 4 */
+    /*global exports */
+    function Weave() {
+        return {
+            parse: function (source) {
+                var lines = source.split("\n"),
+                    filename = null,
+                    outputs = {},
+                    i = 0,
+                    j = 0;
 
-        console.log("DEBUG parsing", lines.length, "of source");
-        for (i = 0; i < lines.length; i += 1) {
-            line = lines[i];
-            check = line.trim();
-            if (i < lines.length - 2 &&
-                lines[i + 1].indexOf("```") === 0 &&
-                check[0] === '[' && check[check.length - 1] === ')') {
-                i += 2;
-                start = check.lastIndexOf('(') + 1;
-                end = check.lastIndexOf(')');
-                filename = line.substr(start, end - start);
-                console.log("# Output Filename: " + filename);
-                if (typeof outputs[filename] === "undefined") {
-                    outputs[filename] = [];
+                for (i = 0; i < lines.length; i += 1) {
+                    line = lines[i];
+                    check = line.trim();
+                    if (i < lines.length - 2 &&
+                            lines[i + 1].indexOf("```") === 0 &&
+                            check[0] === '[' && check[check.length - 1] === ')') {
+                        i += 2;
+                        start = check.lastIndexOf('(') + 1;
+                        end = check.lastIndexOf(')');
+                        filename = line.substr(start, end - start);
+                        if (typeof outputs[filename] === "undefined") {
+                            outputs[filename] = [];
+                        }
+                        outputs[filename].push({start: i + 1, end: -1});
+                    } else if (filename !== null && line.indexOf("```") === 0) {
+                        /* Find the last entry and add the end point */
+                        j = outputs[filename].length - 1;
+                        outputs[filename][j].end = i;
+                        filename = null;
+                    }
                 }
-                outputs[filename].push({start: i + 1, end: -1});
-            } else if (filename !== null && line.indexOf("```") === 0) {
-                /* Find the last entry and add the end point */
-                j = outputs[filename].length - 1;
-                outputs[filename][j].end = i;
-                filename = null;
+                return outputs;
+            },
+            render: function (source, parsed) {
+                var lines = source.split("\n"),
+                    filenames = Object.keys(parsed),
+                    outputs = {};
+
+                function catSource(points) {
+                    var output = [];
+                    points.forEach(function (point) {
+                        var i, start, end;
+                        start = point.start;
+                        end = point.end;
+                        if (start === end) {
+                            output.push(lines[start]);
+                        } else {
+                            for (i = start; i <= end && i < lines.length; i += 1) {
+                                output.push(lines[i]);
+                            }
+                        }
+                    });
+                    return output.join("\n");
+                }
+
+                filenames.forEach(function (filename) {
+                    outputs[filename] = catSource(parsed[filename]);
+                });
+                return outputs;
             }
         };
-        console.log("DEBUG outputs", outputs);
-        return outputs;
-      },
-      render: function (source, parsed) {
-          var lines = source.split("\n"),
-                filenames = Object.kehys(parsed),
-                outputs = {};
-
-          function catSource(points) {
-              var output = [];
-              points.forEach(function (point) {
-                  var i, start, end;
-                  start = point.start;
-                  end = point.end;
-                  for (i = start; i <= end && i < lines.length; i += 1) {
-                      output.push(lines[i]);
-                  }
-              });
-              return output.join("\n");
-          }
-
-          filenames.forEach(function (filename) {
-              outputs[filename] = catSource(parsed[filename]);
-          });
-          return outputs;
-      }
-    };
-  }
+    }
   
-  if (typeof exports !== "undefined") {
-    exports.Weave = Weave;
-  }
+    if (typeof exports !== "undefined") {
+        exports.Weave = Weave;
+    }
 ```
 
 ### mw_test.js
@@ -204,57 +205,64 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
 
 [mw_test.js](mw_test.js)
 ```JavaScript
-  /**
-   * mw_test.js - Test code for mw.js which was generated via mw-bootstrap.js.
-   * @author R. S. Doiel, <rsdoiel@gmail.com>
-   * copyright (c) 2013 all rights reserved
-   * Licensed under BSD 2-clause license. See http://opensource.org/licenses/BSD-2-Clause
-   */
-  var YUI = require("yui").YUI,
-      fs = require("fs"),
-      mw = require("./mw");
+    /**
+     * mw_test.js - Test code for mw.js which was generated via mw-bootstrap.js.
+     * @author R. S. Doiel, <rsdoiel@gmail.com>
+     * copyright (c) 2013 all rights reserved
+     * Licensed under BSD 2-clause license. See http://opensource.org/licenses/BSD-2-Clause
+     */
+    /*jslint node: true, indent: 4 */
+    var YUI = require("yui").YUI,
+        fs = require("fs"),
+        mw = require("./mw");
   
-  YUI({
-    debug: true,
-    useSync: true
-  }).use("test", function (Y) {
-    var testCase;
+    YUI({
+       debug: true,
+       useSync: true
+    }).use("test", function (Y) {
+        var testCase;
+
+        testCase = new Y.Test.Case({
+            name: "Simple testing for mw.js",
+            "Should parse Markdown-Weave.md and yeild a new object": function () {
+                var weave = new mw.Weave(),
+                    source = fs.readFileSync("Markdown-Weave.md").toString(),
+                    results = weave.parse(source);
+
+                //Y.log(results, "debug");
+                Y.Assert.isObject(results);
+                Y.Assert.isObject(results["mw.js"]);
+                Y.Assert.isObject(results["mw.js"][0]);
+                Y.Assert.areSame(128, results["mw.js"][0].start);
+                Y.Assert.areSame(199, results["mw.js"][0].end);
+
+                // Now try running on HelloWorld.md
+                source = fs.readFileSync("HelloWorld.md").toString();
+                results = weave.parse(source);
+                Y.Assert.areSame(8, results["helloworld.js"][0].start);
+                Y.Assert.areSame(8, results["helloworld.js"][0].end);
+            },
+            "Should render  a parsed object into a new object.": function () {
+                var weave = new mw.Weave(),
+                    source = fs.readFileSync("Markdown-Weave.md").toString(),
+                    obj = weave.parse(source),
+                    results = weave.render(source, obj);
+
+                //Y.log(obj, "debug");
+                //Y.log(results, "debug");
+                Y.assert(source.length > 0, "Should have some markdown source");
+                Y.Assert.isObject(obj["cli.js"]);
+                Y.assert(obj["cli.js"].start > 0);
+                Y.assert(obj["cli.js"].end > 0);
+
+                Y.Assert.isObect(results);
+                Y.Assert.isString(results["cli.js"]);
+            }
+        });
     
-    testCase = new Y.Test.Case({
-      name: "Simple testing for mw.js",
-      "Should parse Markdown-Weave.md and yeild a new object": function () {
-        var weave = new mw.Weave(),
-          source = fs.readFileSync("Markdown-Weave.md").toString(),
-          results = weave.parse(source);
-
-          Y.log(results, "debug");
-          Y.Assert.isObject(results);
-          Y.Assert.isObject(results["mw.js"]);
-          Y.Assert.isObject(results["mw.js"][0]);
-          Y.Assert.areSame(46, results["mw.js"][0].start);
-          Y.Assert.areSame(96, results["mw.js"][0].end);
-      },
-      "Should render  a parsed object into a new object.": function () {
-          var weave = new mw.Weave(),
-            source = fs.readFileSync("Misc.md").toString(),
-            obj = weave.parse(source),
-            results = weave.render(obj);
-
-          Y.log(obj, "debug");
-          Y.log(results, "debug");
-          Y.assert(source.length > 0, "Should have some markdown source");
-          Y.Assert.isObject(obj["cli.js"]);
-          Y.assert(obj["cli.js"].start > 0);
-          Y.assert(obj["cli.js"].end > 0);
-
-          Y.Assert.isObect(results);
-          Y.Assert.isString(results["cli.js"]);
-      }
-    });
-    
-    Y.Test.Runner.add(testCase);
-    Y.Test.Runner.run();
-  });
+        Y.Test.Runner.add(testCase);
+        Y.Test.Runner.run();
+     });
 ```
 
 ### design choices
@@ -305,12 +313,10 @@ The command line tool provides the bindings to file IO and processing of command
 
     var argv = opt.optionWith(process.argv);
    
-    console.log("DEBUG argv:", argv);
     if (argv[2] !== undefined && markdownFilename === "") {
         markdownFilename = argv[2];
     }
 
-    console.log("DEBUG processing:", markdownFilename);
     fs.readFile(markdownFilename, function (err, buf) {
         var obj,
             source,
@@ -321,13 +327,11 @@ The command line tool provides the bindings to file IO and processing of command
         }
         source = buf.toString();
         obj = weave.parse(source);
-        console.log("DEBUG obj", obj);// DEBUG
         results = weave.render(source, obj);
-        console.log("DEBUG results:", results);// DEBUG
 
         Object.keys(results).forEach(function (filename) {
             console.log("Writing", filename);
-            fs.fileWrite(filename, results[filename]);
+            fs.writeFile(filename, results[filename]);
         });
     });
 ```
@@ -339,35 +343,37 @@ The command line tool provides the bindings to file IO and processing of command
 [package.json](package.json)
 ```JavaScript
     {
-      "name": "markdown-weave",
-      "version": "0.0.0",
-      "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
-      "main": "mw.js",
-      "scripts": {
-        "test": "mw_test.js"
-      },
-      "devDependencies": {
-          "yuitest": "0.7.x"
-      },
-      "dependencies": {
-          "opt": "0.1.x",
-          "yui": "3.10.x"
-      },
-      "repository": {
-        "type": "git",
-        "url": "git@github.com:rsdoiel/markdown-weave.git"
-      },
-      "keywords": [
-        "markdown",
-        "weave"
-      ],
-      "engines": [
-        "node": "0.10.x",
-        "npm": "1.2.x"
-      ],
-      "author": "R. S. Doiel",
-      "license": "BSD",
-      "readmeFilename": "README.md"
+        "name": "markdown-weave",
+        "version": "0.0.0",
+        "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
+        "main": "mw.js",
+        "scripts": {
+           "test": "mw_test.js"
+        },
+        "devDependencies": {
+            "yuitest": "0.7.x"
+            "mweave": "0.0.1"
+        },
+        "dependencies": {
+            "opt": "0.1.x",
+            "yui": "3.10.x"
+        },
+        "repository": {
+            "type": "git",
+            "url": "git@github.com:rsdoiel/markdown-weave.git"
+        },
+        "keywords": [
+          "markdown",
+          "weave",
+          "javascript"
+        ],
+        "engines": [
+            "node": "0.10.x",
+            "npm": "1.2.x"
+        ],
+        "author": "R. S. Doiel",
+        "license": "BSD",
+        "readmeFilename": "README.md"
     }
 ```
 
