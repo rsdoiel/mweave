@@ -7,11 +7,10 @@
         "mweave": "./cli.js"
     },
     "scripts": {
-       "test": "mw_test.js"
+        "test": "mw_test.js"
     },
     "devDependencies": {
         "yuitest": "0.7.x"
-        "mweave": "0.0.1"
     },
     "dependencies": {
         "opt": "0.1.x",
@@ -26,10 +25,10 @@
       "weave",
       "javascript"
     ],
-    "engines": [
+    "engines": {
         "node": "0.10.x",
         "npm": "1.2.x"
-    ],
+    },
     "author": "R. S. Doiel",
     "license": "BSD",
     "readmeFilename": "README.md"

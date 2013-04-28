@@ -364,19 +364,18 @@ The command line tool provides the bindings to file IO and processing of command
 [package.json](package.json)
 ```JavaScript
     {
-        "name": "markdown-weave",
+        "name": "mweave",
         "version": "0.0.0",
-        "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
+        "description": "This is an experiment in using Markdown and some concepts from literate programming.",
         "main": "mw.js",
         "bin": {
             "mweave": "./cli.js"
         },
         "scripts": {
-           "test": "mw_test.js"
+            "test": "mw_test.js"
         },
         "devDependencies": {
             "yuitest": "0.7.x"
-            "mweave": "0.0.1"
         },
         "dependencies": {
             "opt": "0.1.x",
@@ -391,10 +390,10 @@ The command line tool provides the bindings to file IO and processing of command
           "weave",
           "javascript"
         ],
-        "engines": [
+        "engines": {
             "node": "0.10.x",
             "npm": "1.2.x"
-        ],
+        },
         "author": "R. S. Doiel",
         "license": "BSD",
         "readmeFilename": "README.md"
