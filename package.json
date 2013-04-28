@@ -3,6 +3,9 @@
     "version": "0.0.0",
     "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
     "main": "mw.js",
+    "bin": {
+        "mweave": "./cli.js"
+    },
     "scripts": {
        "test": "mw_test.js"
     },

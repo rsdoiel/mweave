@@ -22,7 +22,6 @@ YUI({
                 source = fs.readFileSync("Markdown-Weave.md").toString(),
                 results = weave.parse(source);
 
-            //Y.log(results, "debug");
             Y.Assert.isObject(results);
             Y.Assert.isObject(results["mw.js"]);
             Y.Assert.isObject(results["mw.js"][0]);
@@ -33,8 +32,6 @@ YUI({
             // Now try running on HelloWorld.md
             source = fs.readFileSync("HelloWorld.md").toString();
             results = weave.parse(source);
-            Y.log("helloworld results:", "debug");
-            Y.log(results, "debug");
             Y.Assert.areSame(8, results["helloworld.js"][0].start);
             Y.Assert.areSame(8, results["helloworld.js"][0].end);
         },
@@ -56,8 +53,6 @@ YUI({
             source = fs.readFileSync("HelloWorld.md").toString();
             obj = weave.parse(source);
             results = weave.render(source, obj);
-            Y.log("helloworld results:", "debug");
-            Y.log(results, "debug");
             Y.Assert.isString(results["helloworld.js"]);
             Y.Assert.areEqual('console.log("Hello World");', results["helloworld.js"]);  
         }
