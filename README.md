@@ -63,6 +63,7 @@ Here's code to bootstrap this whole thing-
         console.log("# This vi command to generate the code for " + ky);
         console.log("vi -e -c '" + outputs[ky].start + "," + outputs[ky].end + " wq! " + ky + "' " +
             markdownFilename);
+        console.log('sed -e "s/    //" -i ' + ky);
      });
 
 ```
@@ -77,7 +78,7 @@ I don't write that quoted block out.
 Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
 
 ```Shell
-    vi -e -c "20,67wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
+    vi -e -c "20,68wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
 ```
 
 # Further reading

@@ -77,6 +77,7 @@ _reboot.sh_ does the following things.
     echo "This is a shell script executing the commands to bootstrap mw.js"
     echo "Running the vi command to pull mw-bootstrap.js out of README.md"
     vi -e -c "20,67wq! mw-bootstrap.js" README.md
+    sed -e "s/    //" -i mw-bootstrap.js
     echo "Running mw-bootstrap.js on Markdown-Weave.md"
     node mw-bootstrap.js Markdown-Weave.md > tmp.sh
     echo "Running the suggested vi commands to make mw.js and mw_test.js"
@@ -114,7 +115,7 @@ Here is the command which I plan to used to build _mw.js_ -
 To generate _mw.js_ try the following command.
 
 ```Shell
-  node mw-bootstrap.js Markdown-Weave.md
+    node mw-bootstrap.js Markdown-Weave.md
 ```
 
 ## mw.js
@@ -248,8 +249,8 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
                 Y.Assert.isObject(results["mw.js"]);
                 Y.Assert.isObject(results["mw.js"][0]);
                 // Remember array of lines cound from zero. End is inclusive.
-                Y.Assert.areSame(133, results["mw.js"][0].start);
-                Y.Assert.areSame(213, results["mw.js"][0].end);
+                Y.Assert.areSame(134, results["mw.js"][0].start);
+                Y.Assert.areSame(214, results["mw.js"][0].end);
 
                 // Now try running on HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
@@ -303,6 +304,7 @@ The command line tool provides the bindings to file IO and processing of command
 
 [cli.js](cli.js)
 ```JavaScript
+    #!/usr/bin/env node
     /**
      * cli.js - this is the command line tool for mweave command. It includes
      * binding mw.js to the file system.
