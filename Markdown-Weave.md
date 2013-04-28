@@ -59,6 +59,7 @@ Array) of start and end line numbers to use in constructing the target file.
             i = 0,
             j = 0;
 
+        console.log("DEBUG parsing", lines.length, "of source");
         for (i = 0; i < lines.length; i += 1) {
             line = lines[i];
             check = line.trim();
@@ -81,6 +82,7 @@ Array) of start and end line numbers to use in constructing the target file.
                 filename = null;
             }
         };
+        console.log("DEBUG outputs", outputs);
         return outputs;
       },
       render: function (markdown_source, parsed_results) {
@@ -118,7 +120,7 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
     
     testCase = new Y.Test.Case({
       name: "Simple testing for mw.js",
-      "Should parse Markdown-Weave.md and yeild an object with what to write to disc": function () {
+      "Should parse Markdown-Weave.md and yeild a new object": function () {
         var weave = new mw.Weave(),
           source = fs.readFileSync("Markdown-Weave.md").toString(),
           results = weave.parse(source);
@@ -128,10 +130,23 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
           Y.Assert.isObject(results["mw.js"]);
           Y.Assert.isObject(results["mw.js"][0]);
           Y.Assert.areSame(46, results["mw.js"][0].start);
-          Y.Assert.areSame(94, results["mw.js"][0].end);
+          Y.Assert.areSame(96, results["mw.js"][0].end);
       },
-      "Should take an object from parse() and render the related text into a new object.": function () {
-         throw "Not implemented."; 
+      "Should render  a parsed object into a new object.": function () {
+          var weave = new mw.Weave(),
+            source = fs.readFileSync("Misc.md").toString(),
+            obj = weave.parse(source),
+            results = weave.render(obj);
+
+          Y.log(obj, "debug");
+          Y.log(results, "debug");
+          Y.assert(source.length > 0, "Should have some markdown source");
+          Y.Assert.isObject(obj["cli.js"]);
+          Y.assert(obj["cli.js"].start > 0);
+          Y.assert(obj["cli.js"].end > 0);
+
+          Y.Assert.isObect(results);
+          Y.Assert.isString(results["cli.js"]);
       }
     });
     
@@ -139,5 +154,3 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
     Y.Test.Runner.run();
   });
 ```
-
-

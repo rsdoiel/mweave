@@ -14,6 +14,7 @@
             i = 0,
             j = 0;
 
+        console.log("DEBUG parsing", lines.length, "of source");
         for (i = 0; i < lines.length; i += 1) {
             line = lines[i];
             check = line.trim();
@@ -36,6 +37,7 @@
                 filename = null;
             }
         };
+        console.log("DEBUG outputs", outputs);
         return outputs;
       },
       render: function (markdown_source, parsed_results) {

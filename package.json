@@ -1,26 +1,27 @@
-{
-  "name": "markdown-weave",
-  "version": "0.0.0",
-  "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
-  "main": "mw.js",
-  "scripts": {
-    "test": "mw_test.js"
-  },
-  "devDependencies": {
-      "yuitest"
-  },
-  "dependencies": {
-      "yui": "3.10.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:rsdoiel/markdown-weave.git"
-  },
-  "keywords": [
-    "markdown",
-    "weave"
-  ],
-  "author": "R. S. Doiel",
-  "license": "BSD",
-  "readmeFilename": "README.md"
-}
+    {
+      "name": "markdown-weave",
+      "version": "0.0.0",
+      "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
+      "main": "mw.js",
+      "scripts": {
+        "test": "mw_test.js"
+      },
+      "devDependencies": {
+          "yuitest"
+      },
+      "dependencies": {
+          "opt": "0.1.x",
+          "yui": "3.10.x"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git@github.com:rsdoiel/markdown-weave.git"
+      },
+      "keywords": [
+        "markdown",
+        "weave"
+      ],
+      "author": "R. S. Doiel",
+      "license": "BSD",
+      "readmeFilename": "README.md"
+    }
