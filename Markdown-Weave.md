@@ -154,7 +154,7 @@ processing to be written out to disc.
                         if (typeof outputs[filename] === "undefined") {
                             outputs[filename] = [];
                         }
-                        outputs[filename].push({start: i + 1, end: -1});
+                        outputs[filename].push({start: i, end: -1});
                     } else if (filename !== null && line.indexOf("```") === 0) {
                         /* Find the last entry and add the end point */
                         j = outputs[filename].length - 1;
@@ -175,12 +175,12 @@ processing to be written out to disc.
                         var i, start, end;
                         start = point.start;
                         end = point.end;
-                        if (start === end) {
-                            output.push(lines[start]);
-                        } else {
-                            for (i = start; i <= end && i < lines.length; i += 1) {
-                                output.push(lines[i]);
-                            }
+                        console.log("DEBUG start, end", start, end);
+                        console.log("DEBUG before", lines[start-1]);
+                        console.log("DEBUG target", lines[start]);
+                        console.log("DEBUG after", lines[start+1]);
+                        for (i = start; i <= end && i < lines.length; i += 1) {
+                            output.push(lines[i].substr(4));
                         }
                     });
                     return output.join("\n");
@@ -239,6 +239,8 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
                 // Now try running on HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
                 results = weave.parse(source);
+                Y.log("helloworld results:", "debug");
+                Y.log(results, "debug");
                 Y.Assert.areSame(8, results["helloworld.js"][0].start);
                 Y.Assert.areSame(8, results["helloworld.js"][0].end);
             },
@@ -257,6 +259,15 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
 
                 Y.Assert.isObect(results);
                 Y.Assert.isString(results["cli.js"]);
+
+                // Now let's test our simple HelloWorld.md
+                source = fs.readFileSync("HelloWorld.md").toString();
+                obj = weave.parse(source);
+                results = weave.render(source, obj);
+                Y.log("helloworld results:", "debug");
+                Y.log(results, "debug");
+                Y.Assert.isString(results["helloworld.js"]);
+                Y.Assert.areEqual('console.log("Hello World");', results["helloworld.js"]);  
             }
         });
     

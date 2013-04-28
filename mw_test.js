@@ -32,6 +32,8 @@
                 // Now try running on HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
                 results = weave.parse(source);
+                Y.log("helloworld results:", "debug");
+                Y.log(results, "debug");
                 Y.Assert.areSame(8, results["helloworld.js"][0].start);
                 Y.Assert.areSame(8, results["helloworld.js"][0].end);
             },
@@ -50,6 +52,15 @@
 
                 Y.Assert.isObect(results);
                 Y.Assert.isString(results["cli.js"]);
+
+                // Now let's test our simple HelloWorld.md
+                source = fs.readFileSync("HelloWorld.md").toString();
+                obj = weave.parse(source);
+                results = weave.render(source, obj);
+                Y.log("helloworld results:", "debug");
+                Y.log(results, "debug");
+                Y.Assert.isString(results["helloworld.js"]);
+                Y.Assert.areEqual('console.log("Hello World");', results["helloworld.js"]);  
             }
         });
     
