@@ -167,8 +167,28 @@ processing to be written out to disc.
         console.log("DEBUG outputs", outputs);
         return outputs;
       },
-      render: function (markdown_source, parsed_results) {
-          throw "render() is not implemented yet.";
+      render: function (source, parsed) {
+          var lines = source.split("\n"),
+                filenames = Object.kehys(parsed),
+                outputs = {};
+
+          function catSource(points) {
+              var output = [];
+              points.forEach(function (point) {
+                  var i, start, end;
+                  start = point.start;
+                  end = point.end;
+                  for (i = start; i <= end && i < lines.length; i += 1) {
+                      output.push(lines[i]);
+                  }
+              });
+              return output.join("\n");
+          }
+
+          filenames.forEach(function (filename) {
+              outputs[filename] = catSource(parsed[filename]);
+          });
+          return outputs;
       }
     };
   }
