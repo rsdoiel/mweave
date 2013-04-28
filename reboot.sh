@@ -10,9 +10,6 @@
     node mw-bootstrap.js Markdown-Weave.md > tmp.sh
     echo "Running the suggested vi commands to make mw.js and mw_test.js"
     . tmp.sh
-    echo "Create cli.js for command line program."
-    node mw-bootstrap.js Misc.md > tmp.sh
-    . tmp.sh
     rm tmp.sh
 
     #

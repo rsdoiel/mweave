@@ -41,7 +41,7 @@
         return outputs;
       },
       render: function (markdown_source, parsed_results) {
-          throw "stringify() is not implemented yet.";
+          throw "render() is not implemented yet.";
       }
     };
   }

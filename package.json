@@ -7,7 +7,7 @@
         "test": "mw_test.js"
       },
       "devDependencies": {
-          "yuitest"
+          "yuitest": "0.7.x"
       },
       "dependencies": {
           "opt": "0.1.x",
@@ -20,6 +20,10 @@
       "keywords": [
         "markdown",
         "weave"
+      ],
+      "engines": [
+        "node": "0.10.x",
+        "npm": "1.2.x"
       ],
       "author": "R. S. Doiel",
       "license": "BSD",

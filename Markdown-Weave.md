@@ -245,46 +245,9 @@ an event module for I/O and leveraging that in a wrapper of this library (e.g. _
 sense to me at this stage.
 
 
-# Misc support scripts
-
-## Node packing of Markdown-Weave
-
-
-[package.json](package.json)
-```JavaScript
-    {
-      "name": "markdown-weave",
-      "version": "0.0.0",
-      "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
-      "main": "mw.js",
-      "scripts": {
-        "test": "mw_test.js"
-      },
-      "devDependencies": {
-          "yuitest"
-      },
-      "dependencies": {
-          "opt": "0.1.x",
-          "yui": "3.10.x"
-      },
-      "repository": {
-        "type": "git",
-        "url": "git@github.com:rsdoiel/markdown-weave.git"
-      },
-      "keywords": [
-        "markdown",
-        "weave"
-      ],
-      "author": "R. S. Doiel",
-      "license": "BSD",
-      "readmeFilename": "README.md"
-    }
-```
-
-
 ## Biulding command-line tool
 
-The command line tool provides the bindings to file IO.
+The command line tool provides the bindings to file IO and processing of command line options.
 
 [cli.js](cli.js)
 ```JavaScript
@@ -296,13 +259,11 @@ The command line tool provides the bindings to file IO.
      */
 
     var fs = require("fs"),
-        path = require("path"),
         opt = require("opt").create(),
         mw = require("./mw"),
-        catfiles = require("./catfiles"),
         markdownFilename = "";
 
-    opt.optionHelp("USAGE mweave MARKDOWN_FILENAME",
+    opt.optionHelp("USAGE mweave -i MARKDOWN_FILENAME",
         "SYNOPSIS: Process the markdown file listed on the command line and render any" +
         "source files defined in it.",
         "OPTIONS",
@@ -325,7 +286,7 @@ The command line tool provides the bindings to file IO.
     var argv = opt.optionWith(process.argv);
    
     console.log("DEBUG argv:", argv);
-    if (argv[2] !== undefined) {
+    if (argv[2] !== undefined && markdownFilename === "") {
         markdownFilename = argv[2];
     }
 
@@ -341,11 +302,52 @@ The command line tool provides the bindings to file IO.
         source = buf.toString();
         obj = weave.parse(source);
         console.log("DEBUG obj", obj);// DEBUG
-        results = weave.parse(source, obj);
+        results = weave.render(source, obj);
         console.log("DEBUG results:", results);// DEBUG
 
         Object.keys(results).forEach(function (filename) {
-            // FIXME: Concatenate the files, then write to disc
+            console.log("Writing", filename);
+            fs.fileWrite(filename, results[filename]);
         });
     });
 ```
+
+# Misc support scripts
+
+## Node packaging of _mweave.js_
+
+[package.json](package.json)
+```JavaScript
+    {
+      "name": "markdown-weave",
+      "version": "0.0.0",
+      "description": "This is an experiment in using Markdown and some concepts from Donald Knuth's literate programming.",
+      "main": "mw.js",
+      "scripts": {
+        "test": "mw_test.js"
+      },
+      "devDependencies": {
+          "yuitest": "0.7.x"
+      },
+      "dependencies": {
+          "opt": "0.1.x",
+          "yui": "3.10.x"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git@github.com:rsdoiel/markdown-weave.git"
+      },
+      "keywords": [
+        "markdown",
+        "weave"
+      ],
+      "engines": [
+        "node": "0.10.x",
+        "npm": "1.2.x"
+      ],
+      "author": "R. S. Doiel",
+      "license": "BSD",
+      "readmeFilename": "README.md"
+    }
+```
+
