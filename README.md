@@ -85,4 +85,6 @@ Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
 
 * [Markdown-Weave.md](Markdown-Weave.md) is the source to _mw.js_ and command line tool. Since this is process by _mw-bootstrap.js_ it's not quiet literate yet.
 * [HelloWorld.md](HelloWorld.md) - A simple hello world example.
+* [Example-1.md](Example-1.md) - An example of writing multiple code blocks that form a single JavaScript file.
+
 
