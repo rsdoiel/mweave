@@ -309,11 +309,13 @@ The command line tool provides the bindings to file IO and processing of command
 
     var fs = require("fs"),
         path = require("path"),
+        handlebars = require("handlebars"),
         marked = require("marked"),
         opt = require("opt").create(),
         mw = require("./mw"),
         markdownFilename = "",
         documentDirectory = "",
+        handlebarsTemplate = "",
         renderHTML = false;
 
     opt.optionHelp("USAGE mweave MARKDOWN_FILENAME",
@@ -340,6 +342,12 @@ The command line tool provides the bindings to file IO and processing of command
         opt.consume(param);
     }, "Set the document directory to write to.");
     
+    opt.option(["-b", "--handlebars"], function (param) {
+        if (param) {
+            handlebarTemplate = param.trim();
+        }
+        opt.consume(param);
+    }, "Use the handlebars template when rendering HTML.");
     opt.option(["-o", "--output"], function (param) {
         renderHTML = true;
         if (param) {
@@ -365,6 +373,7 @@ The command line tool provides the bindings to file IO and processing of command
     fs.readFile(markdownFilename, function (err, buf) {
         var obj,
             source,
+            template_source,
             html,
             weave = new mw.Weave();
 
@@ -396,6 +405,11 @@ The command line tool provides the bindings to file IO and processing of command
                 }
             });
             html = marked(source);
+            if (handlebarsTemplate !== "") {
+                template_source = fs.readFileSync(handlebarsTemplate).toString();
+                template = handlebars.compile(source);
+                html = template({content: html});
+            }
             if (htmlFilename !== "") {
                 console.log("Writing", path.join(documentDirectory, htmlFilename));
                 fs.writeFile(path.join(documentDirectory, htmlFilename), html);
@@ -428,11 +442,13 @@ The command line tool provides the bindings to file IO and processing of command
             "yuitest": "0.7.x"
         },
         "dependencies": {
+            "handlebars": "1.0.x",
+            "marked": "0.2.x",
             "opt": "0.1.x"
         },
         "repository": {
             "type": "git",
-            "url": "git@github.com:rsdoiel/markdown-weave.git"
+            "url": "git@github.com:rsdoiel/mweave.git"
         },
         "keywords": [
           "markdown",

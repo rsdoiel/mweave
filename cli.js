@@ -8,11 +8,13 @@
 
 var fs = require("fs"),
     path = require("path"),
+    handlebars = require("handlebars"),
     marked = require("marked"),
     opt = require("opt").create(),
     mw = require("./mw"),
     markdownFilename = "",
     documentDirectory = "",
+    handlebarsTemplate = "",
     renderHTML = false;
 
 opt.optionHelp("USAGE mweave MARKDOWN_FILENAME",
@@ -39,6 +41,12 @@ opt.option(["-d", "--directory"], function (param) {
     opt.consume(param);
 }, "Set the document directory to write to.");
 
+opt.option(["-b", "--handlebars"], function (param) {
+    if (param) {
+        handlebarTemplate = param.trim();
+    }
+    opt.consume(param);
+}, "Use the handlebars template when rendering HTML.");
 opt.option(["-o", "--output"], function (param) {
     renderHTML = true;
     if (param) {
@@ -64,6 +72,7 @@ if (argv[3] !== undefined && htmlFilename === "") {
 fs.readFile(markdownFilename, function (err, buf) {
     var obj,
         source,
+        template_source,
         html,
         weave = new mw.Weave();
 
@@ -95,6 +104,11 @@ fs.readFile(markdownFilename, function (err, buf) {
             }
         });
         html = marked(source);
+        if (handlebarsTemplate !== "") {
+            template_source = fs.readFileSync(handlebarsTemplate).toString();
+            template = handlebars.compile(source);
+            html = template({content: html});
+        }
         if (htmlFilename !== "") {
             console.log("Writing", path.join(documentDirectory, htmlFilename));
             fs.writeFile(path.join(documentDirectory, htmlFilename), html);

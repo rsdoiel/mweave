@@ -14,11 +14,13 @@
         "yuitest": "0.7.x"
     },
     "dependencies": {
+        "handlebars": "1.0.x",
+        "marked": "0.2.x",
         "opt": "0.1.x"
     },
     "repository": {
         "type": "git",
-        "url": "git@github.com:rsdoiel/markdown-weave.git"
+        "url": "git@github.com:rsdoiel/mweave.git"
     },
     "keywords": [
       "markdown",
