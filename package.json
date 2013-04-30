@@ -1,6 +1,6 @@
 {
     "name": "mweave",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "This is an experiment in using Markdown and some concepts from literate programming.",
     "main": "mw.js",
     "bin": {
