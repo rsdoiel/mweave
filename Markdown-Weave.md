@@ -307,7 +307,8 @@ The command line tool provides the bindings to file IO and processing of command
      * copyright (c) 2013 all rights reserved
      */
 
-    var fs = require("fs"),
+    var VERSION = "0.0.2", 
+        fs = require("fs"),
         path = require("path"),
         handlebars = require("handlebars"),
         marked = require("marked"),
@@ -316,6 +317,7 @@ The command line tool provides the bindings to file IO and processing of command
         markdownFilename = "",
         documentDirectory = "",
         handlebarsTemplate = "",
+        jsonFilename = "",
         renderHTML = false;
 
     opt.optionHelp("USAGE mweave MARKDOWN_FILENAME",
@@ -342,7 +344,13 @@ The command line tool provides the bindings to file IO and processing of command
         opt.consume(param);
     }, "Set the document directory to write to.");
     
-    opt.option(["-b", "--handlebars"], function (param) {
+    opt.option(["-j", "--json"], function (param) {
+        if (param) {
+            jsonFilename = param.trim();
+        }
+        opt.consume(param);
+    }, 'Use JSON file for additional content when rendering a template. (e.g. {"title":"My Webpage"})');
+    opt.option(["-t", "--template"], function (param) {
         if (param) {
             handlebarsTemplate = param.trim();
         }
@@ -355,6 +363,11 @@ The command line tool provides the bindings to file IO and processing of command
         }
         opt.consume(param);
     }, "Render HTML from Markdown document as filename");
+
+    opt.option(["-v", "--version"], function (param) {
+        console.log("Version ", VERSION);
+        process.exit(0);
+    }, "Show the version number");
 
     opt.option(["-h", "--help"], function (param) {
         opt.usage();
@@ -375,6 +388,10 @@ The command line tool provides the bindings to file IO and processing of command
             source,
             template_source,
             html,
+            data = {
+                title: markdownFilename,
+                content: null
+            },
             weave = new mw.Weave();
 
         if (err) {
@@ -406,9 +423,13 @@ The command line tool provides the bindings to file IO and processing of command
             });
             html = marked(source);
             if (handlebarsTemplate !== "") {
+                if (jsonFilename !== "") {
+                    data = JSON.parse(fs.readFileSync(jsonFilename).toString());
+                }
                 template_source = fs.readFileSync(handlebarsTemplate).toString();
                 template = handlebars.compile(template_source);
-                html = template({content: html});
+                data.content = html;
+                html = template(data);
             }
             if (htmlFilename !== "") {
                 console.log("Writing", path.join(documentDirectory, htmlFilename));
