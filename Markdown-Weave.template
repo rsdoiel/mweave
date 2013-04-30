@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{title}}</title>
+        <title>MWeave</title>
     </head>
     <body>
-        <header>{{header}}</header>
+        <header><h1>MWeave</h1> an experiment in simplified literate programming.</header>
         <section>{{content}}</section>
-        <footer>{{footer}}</footer>
+        <footer></footer>
     </body>
 </html>
