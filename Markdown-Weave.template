@@ -5,7 +5,7 @@
     </head>
     <body>
         <header><h1>MWeave</h1> an experiment in simplified literate programming.</header>
-        <section>{{content}}</section>
+        <section>{{{content}}}</section>
         <footer></footer>
     </body>
 </html>

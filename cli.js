@@ -43,7 +43,7 @@ opt.option(["-d", "--directory"], function (param) {
 
 opt.option(["-b", "--handlebars"], function (param) {
     if (param) {
-        handlebarTemplate = param.trim();
+        handlebarsTemplate = param.trim();
     }
     opt.consume(param);
 }, "Use the handlebars template when rendering HTML.");
@@ -106,7 +106,7 @@ fs.readFile(markdownFilename, function (err, buf) {
         html = marked(source);
         if (handlebarsTemplate !== "") {
             template_source = fs.readFileSync(handlebarsTemplate).toString();
-            template = handlebars.compile(source);
+            template = handlebars.compile(template_source);
             html = template({content: html});
         }
         if (htmlFilename !== "") {

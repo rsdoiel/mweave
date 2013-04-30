@@ -344,7 +344,7 @@ The command line tool provides the bindings to file IO and processing of command
     
     opt.option(["-b", "--handlebars"], function (param) {
         if (param) {
-            handlebarTemplate = param.trim();
+            handlebarsTemplate = param.trim();
         }
         opt.consume(param);
     }, "Use the handlebars template when rendering HTML.");
@@ -407,7 +407,7 @@ The command line tool provides the bindings to file IO and processing of command
             html = marked(source);
             if (handlebarsTemplate !== "") {
                 template_source = fs.readFileSync(handlebarsTemplate).toString();
-                template = handlebars.compile(source);
+                template = handlebars.compile(template_source);
                 html = template({content: html});
             }
             if (htmlFilename !== "") {
