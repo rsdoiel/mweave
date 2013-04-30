@@ -374,7 +374,7 @@ The command line tool provides the bindings to file IO and processing of command
         "scripts": {
             "test": "mw_test.js"
         },
-        "devDependencies": {
+        "optionalDependencies": {
             "yui": "3.10.x",
             "yuitest": "0.7.x"
         },

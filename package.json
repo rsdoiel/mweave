@@ -9,7 +9,7 @@
     "scripts": {
         "test": "mw_test.js"
     },
-    "devDependencies": {
+    "optionalDependencies": {
         "yui": "3.10.x",
         "yuitest": "0.7.x"
     },
