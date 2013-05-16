@@ -7,7 +7,7 @@
         "mweave": "./cli.js"
     },
     "scripts": {
-        "test": "mw_test.js"
+        "test": "node mw_test.js"
     },
     "optionalDependencies": {
         "yui": "3.10.x",
