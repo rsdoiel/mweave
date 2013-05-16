@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * mw-bootstrap.js - an experiment in literate style programming in a 
  * markdown file.
@@ -5,7 +6,7 @@
  * copyright (c) 2013 all rights reserved
  * Licensed under the BSD 2-clause license. See http://opensource.org/licenses/BSD-2-Clause
  */
- 
+ require("shelljs/global"); 
  var fs = require("fs"),
     lines = [],
     line = "",
@@ -17,10 +18,20 @@
     start = 0,
     end = 0;
 
+ function exportLines(lines, outFilename, start, end) {
+     fs.writeFile(outFilename, function (err) {
+         if (err) {
+             console.error(err);
+             process.exit(1);
+         }
+         sed("-i", /    /,"", outFilename);
+     });
+ }
+
  if (process.argv.length === 3) {
     markdownFilename = process.argv[2];
  }
- lines = fs.readFileSync(markdownFilename).toString().split("\n");
+ lines = fs.readFileSync(markdownFilename).toString().split(/\n|\r\n/);
  for (i = 0; i < lines.length; i += 1) {
     line = lines[i];
     check = line.trim();
@@ -41,8 +52,11 @@
     }
  };
  Object.keys(outputs).forEach(function (ky) {
-    console.log("# This vi command to generate the code for " + ky);
-    console.log("vi -e -c '" + outputs[ky].start + "," + outputs[ky].end + " wq! " + ky + "' " +
+     exportLines(lines, ky, outputs[ky].start, outputs[ky].end);
+    /*
+     console.log("# This vi command to generate the code for " + ky);
+     console.log("vi -e -c '" + outputs[ky].start + "," + outputs[ky].end + " wq! " + ky + "' " +
         markdownFilename);
-    console.log('sed -e "s/    //" -i ' + ky);
+     console.log('sed -e "s/    //" -i ' + ky);
+     */
  });

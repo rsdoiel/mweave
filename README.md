@@ -17,6 +17,7 @@ Here's code to bootstrap this whole thing-
 
 [mw-bootstrap.js](mw-bootstrap.js)
 ```JavaScript
+    #!/usr/bin/env node
     /**
      * mw-bootstrap.js - an experiment in literate style programming in a 
      * markdown file.
@@ -24,7 +25,7 @@ Here's code to bootstrap this whole thing-
      * copyright (c) 2013 all rights reserved
      * Licensed under the BSD 2-clause license. See http://opensource.org/licenses/BSD-2-Clause
      */
-     
+     require("shelljs/global"); 
      var fs = require("fs"),
         lines = [],
         line = "",
@@ -36,10 +37,20 @@ Here's code to bootstrap this whole thing-
         start = 0,
         end = 0;
 
+     function exportLines(lines, outFilename, start, end) {
+         fs.writeFile(outFilename, function (err) {
+             if (err) {
+                 console.error(err);
+                 process.exit(1);
+             }
+             sed("-i", /    /,"", outFilename);
+         });
+     }
+
      if (process.argv.length === 3) {
         markdownFilename = process.argv[2];
      }
-     lines = fs.readFileSync(markdownFilename).toString().split("\n");
+     lines = fs.readFileSync(markdownFilename).toString().split(/\n|\r\n/);
      for (i = 0; i < lines.length; i += 1) {
         line = lines[i];
         check = line.trim();
@@ -59,27 +70,22 @@ Here's code to bootstrap this whole thing-
             filename = "";
         }
      };
-     Object.keys(outputs).forEach(function (ky) {
-        console.log("# This vi command to generate the code for " + ky);
-        console.log("vi -e -c '" + outputs[ky].start + "," + outputs[ky].end + " wq! " + ky + "' " +
-            markdownFilename);
-        console.log('sed -e "s/    //" -i ' + ky);
+     Object.keys(outputs).forEach(function (outFilename) {
+         exportLines(lines, outFilename, outputs[outFilename].start, outputs[outFilename].end);
      });
-
 ```
 
-Above is the bootstrap code.  To "bootstrap" I'm using _ex_'s write lines command to generate the
-the first instance of **mw-bootstrap.js**. Then **mw-bootstrap.js** will be used to process
-**README.md** and generate subsequent versions. To discover the filename to write to I'm 
-looking at the line immediately before the tripple quotes and if there is a line then I assume
-the link target is the desired filename.  If there is a blank line before the tripple quotes then
-I don't write that quoted block out.
+You can bootstrap with a few Unix commands (_vi_, _sed_, _chmod_, and _node_).
 
-Here's the _vi_ command to generate **mw-bootstrap.js** the first time.
-
-```Shell
-    vi -e -c "20,68wq! mw-bootstrap.js" README.md;node mw-bootstrap.js
+[bootstrap.sh](bootstrap.sh)
+```shell
+    npm install shelljs
+    vi -e -c "20,75wq! mw-bootstrap.js" README.md
+    sed -ie "s/    //" mw-bootstrap.js
+    chmod 770 mw-bootstrap.js
+    ./mw-bootstrap.js Markdown-Weave.md
 ```
+
 
 # Further reading
 

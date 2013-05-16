@@ -52,84 +52,16 @@ My experiment, _mweave.js_, differs from Literate Programming definition in a co
 
 ## Running mw-bootstrap.js on Markdown-Weaver.md
 
-There is a shell script that generate _mw-bootstrap.js_. It relies on _bash_ and _vi_.
-You can run that script with the following command--
+You need ot generate _mw-bootstrap.js_.  You can do this with four Unix commands ---
 
 ```Shell
-    bash reboot.sh
+    npm install shelljs
+    vi -e -c "20,81wq! mw-bootstrap.js" README.md
+    sed -ie "s/    //" mw-bootstrap.js
+    chmod 770 mw-bootstrap.js
+    ./mw-bootstrap.js Markdown-Weave.md
 ```
 
-### reboot.sh aside
-
-(this is being replaced by reboot.js based on shelljs as the bootstrap.)
-
-Ideally I would like to beable to rebuild the system into useable state
-from a simple application of the bootstrap program listed in [README.md](README.md).
-This shell script illustrates the commands need to build the system from scratch.
-
-_reboot.sh_ does the following things.
-
-[reboot.sh](reboot.sh)
-```Shell
-    #!/bin/bash
-
-    #
-    # Generate JavaScript source files.
-    #
-    echo "This is a shell script executing the commands to bootstrap mw.js"
-    echo "Running the vi command to pull mw-bootstrap.js out of README.md"
-    vi -e -c "20,67wq! mw-bootstrap.js" README.md
-    sed -e "s/    //" -i mw-bootstrap.js
-    echo "Running mw-bootstrap.js on Markdown-Weave.md"
-    node mw-bootstrap.js Markdown-Weave.md > tmp.sh
-    echo "Running the suggested vi commands to make mw.js and mw_test.js"
-    . tmp.sh
-    rm tmp.sh
-
-    #
-    # Setup and run some testing.
-    #
-    if [ -f "mw.js" ];then
-        echo "Found mw.js"
-    else
-        echo "Missing mw.js, something went wrong."
-        exit 1
-    fi
-    if [ -f "mw_test.js" ]; then
-        node mw_test.js
-    else
-        echo "Missing mw_test.js, something went wrong."
-        exit 1
-    fi
-
-    if [ -f "cli.js" ] && [ -f "HelloWorld.md" ]; then
-        node cli.js HelloWorld.md
-        node test_helloworld.js
-    fi
-```
-
-_reboot.js_ is replacing _reboot.sh_ as the root bootstrap code. The NodeJS module _shelljs_
-is what allows the move from _Bash+sed+vi_ to just JavaScript.
-
-[reboot.js](reboot.js)
-```
-    /**
-     * reboot.js - a bootstrap script to create mw-bootstrap.js from REAMDE.md
-     */
-    //TODO Rewrite reboot.sh in Shelljs
-```
-
-If Markdown-Weave.md was going to be run with _ms.js_ then I would have created the above
-script in multiple blocks.  _mw-bootstrap.js_ does not support that so this file is less literate
-in that sense.
-
-Here is the command which I plan to used to build _mw.js_ -
-
-To generate _mw.js_ try the following command.
-
-```Shell
-    node mw-bootstrap.js Markdown-Weave.md
-```
 
 ## mw.js
 
