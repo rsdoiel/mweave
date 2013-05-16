@@ -1,37 +1,7 @@
-{
-    "name": "mweave",
-    "version": "0.0.1",
-    "description": "This is an experiment in using Markdown and some concepts from literate programming.",
-    "main": "mw.js",
-    "bin": {
-        "mweave": "./cli.js"
-    },
-    "scripts": {
-        "test": "node mw_test.js"
-    },
-    "optionalDependencies": {
-        "yui": "3.10.x",
-        "yuitest": "0.7.x"
-    },
-    "dependencies": {
-        "handlebars": "1.0.x",
-        "marked": "0.2.x",
-        "opt": "0.1.x"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:rsdoiel/mweave.git"
-    },
-    "keywords": [
-      "markdown",
-      "weave",
-      "javascript"
-    ],
-    "engines": {
-        "node": "0.10.x",
-        "npm": "1.2.x"
-    },
-    "author": "R. S. Doiel",
-    "license": "BSD",
-    "readmeFilename": "README.md"
-}
+function (err) {
+ if (err) {
+         console.error(err);
+         process.exit(1);
+     }
+     sed("-i", /    /,"", outFilename);
+ }

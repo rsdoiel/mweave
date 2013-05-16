@@ -37,7 +37,7 @@ Here's code to bootstrap this whole thing-
         start = 0,
         end = 0;
 
-     function exportLines(lines, outFilename, start, end) {
+     function exportLines(outFilename, start, end, lines) {
          fs.writeFile(outFilename, function (err) {
              if (err) {
                  console.error(err);
@@ -71,7 +71,7 @@ Here's code to bootstrap this whole thing-
         }
      };
      Object.keys(outputs).forEach(function (outFilename) {
-         exportLines(lines, outFilename, outputs[outFilename].start, outputs[outFilename].end);
+         exportLines(outFilename, outputs[outFilename].start, outputs[outFilename].end, lines);
      });
 ```
 
@@ -81,7 +81,7 @@ You can bootstrap with a few Unix commands (_vi_, _sed_, _chmod_, and _node_).
 ```shell
     npm install shelljs
     vi -e -c "20,75wq! mw-bootstrap.js" README.md
-    sed -ie "s/    //" mw-bootstrap.js
+    sed -i -e "s/    //" mw-bootstrap.js
     chmod 770 mw-bootstrap.js
     ./mw-bootstrap.js Markdown-Weave.md
 ```
