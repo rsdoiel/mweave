@@ -52,7 +52,7 @@ My experiment, _mweave.js_, differs from Literate Programming definition in a co
 
 ## Running mw-bootstrap.js on Markdown-Weaver.md
 
-You need ot generate _mw-bootstrap.js_.  You can do this with four Unix commands ---
+You need to generate _mw-bootstrap.js_.  You can do this with four Unix commands ---
 
 ```Shell
     npm install shelljs
