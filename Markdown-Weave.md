@@ -61,6 +61,8 @@ You can run that script with the following command--
 
 ### reboot.sh aside
 
+(this is being replaced by reboot.js based on shelljs as the bootstrap.)
+
 Ideally I would like to beable to rebuild the system into useable state
 from a simple application of the bootstrap program listed in [README.md](README.md).
 This shell script illustrates the commands need to build the system from scratch.
@@ -104,6 +106,17 @@ _reboot.sh_ does the following things.
         node cli.js HelloWorld.md
         node test_helloworld.js
     fi
+```
+
+_reboot.js_ is replacing _reboot.sh_ as the root bootstrap code. The NodeJS module _shelljs_
+is what allows the move from _Bash+sed+vi_ to just JavaScript.
+
+[reboot.js](reboot.js)
+```
+    /**
+     * reboot.js - a bootstrap script to create mw-bootstrap.js from REAMDE.md
+     */
+    //TODO Rewrite reboot.sh in Shelljs
 ```
 
 If Markdown-Weave.md was going to be run with _ms.js_ then I would have created the above
@@ -456,7 +469,8 @@ The command line tool provides the bindings to file IO and processing of command
             "mweave": "./cli.js"
         },
         "scripts": {
-            "test": "mw_test.js"
+            "build": "node build.js",
+            "test": "node mw_test.js"
         },
         "optionalDependencies": {
             "yui": "3.10.x",
@@ -465,7 +479,8 @@ The command line tool provides the bindings to file IO and processing of command
         "dependencies": {
             "handlebars": "1.0.x",
             "marked": "0.2.x",
-            "opt": "0.1.x"
+            "opt": "0.1.x",
+            "shelljs": "0.1.x"
         },
         "repository": {
             "type": "git",
