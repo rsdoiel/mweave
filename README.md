@@ -79,7 +79,7 @@ You can bootstrap with a few Unix commands (_vi_, _sed_, _chmod_, and _node_).
 
 [bootstrap.sh](bootstrap.sh)
 ```shell
-    npm install shelljs
+    sudo npm install -g shelljs
     vi -e -c "20,75wq! mw-bootstrap.js" README.md
     sed -i -e "s/    //" mw-bootstrap.js
     chmod 770 mw-bootstrap.js
