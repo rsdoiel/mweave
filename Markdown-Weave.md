@@ -57,7 +57,7 @@ You need to generate _mw-bootstrap.js_.  You can do this with four Unix commands
 ```Shell
     npm install shelljs
     vi -e -c "20,81wq! mw-bootstrap.js" README.md
-    sed -i -e "s/    //" mw-bootstrap.js
+    sed -e "s/    //" -i mw-bootstrap.js 
     chmod 770 mw-bootstrap.js
     ./mw-bootstrap.js Markdown-Weave.md
 ```
