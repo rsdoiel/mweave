@@ -394,7 +394,7 @@ The command line tool provides the bindings to file IO and processing of command
 ```JavaScript
     {
         "name": "mweave",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "description": "This is an experiment in using Markdown and some concepts from literate programming.",
         "main": "mw.js",
         "bin": {
