@@ -89,6 +89,8 @@ You can bootstrap with a few Unix commands (_vi_, _sed_, _chmod_, and _node_).
     sed -i -e "s/    //" mw-bootstrap.js
     chmod 770 mw-bootstrap.js
     ./mw-bootstrap.js
+    npm install
+    npm test
 ```
 
 

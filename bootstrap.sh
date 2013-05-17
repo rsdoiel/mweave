@@ -4,3 +4,5 @@
     sed -i -e "s/    //" mw-bootstrap.js
     chmod 770 mw-bootstrap.js
     ./mw-bootstrap.js
+    npm install
+    npm test

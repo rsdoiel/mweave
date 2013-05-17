@@ -402,7 +402,7 @@ The command line tool provides the bindings to file IO and processing of command
         },
         "scripts": {
             "build": "node build.js",
-            "test": "node mw_test.js"
+            "test": "node tests.js"
         },
         "optionalDependencies": {
             "yui": "3.10.x",
@@ -431,5 +431,26 @@ The command line tool provides the bindings to file IO and processing of command
         "license": "BSD",
         "readmeFilename": "README.md"
     }
+```
+
+## Run Some Tests
+
+Software should have a sense of if it is working. This is done by tests.
+We can use the bootstrap process to see if the basics of _mweave_ is working.
+
+[tests.js](tests.js)
+```JavaScript
+    #!/usr/bin/env node
+    /**
+     * tests.js - Run tests to see if _mweave_ is working to some degree.
+     */
+    require("shelljs/global");
+    // Run mw_test.js first.
+    if (exec("node mw_test.js").code !== 0) {
+        echo("node mw_test.js returned a non-zero status. :-(");
+        process.exit(1);
+    }
+    // Now run cli.js on Markdown-Weave.md, see if 
+    // Sandbox is updated correctly.
 ```
 
