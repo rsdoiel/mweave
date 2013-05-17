@@ -1,6 +1,6 @@
 {
     "name": "mweave",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "This is an experiment in using Markdown and some concepts from literate programming.",
     "main": "mw.js",
     "bin": {
@@ -33,12 +33,12 @@
         "node": "0.10.x",
         "npm": "1.2.x"
     },
-    "files": {
+    "files": [
         "README.md",
         "Markdown-Weave.md",
         "Example-1.md",
         "HelloWorld.md"
-    },
+    ],
     "author": "R. S. Doiel",
     "license": "BSD",
     "readmeFilename": "README.md"

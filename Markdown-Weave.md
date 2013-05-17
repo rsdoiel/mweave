@@ -193,8 +193,8 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
                 Y.Assert.isObject(results["mw.js"]);
                 Y.Assert.isObject(results["mw.js"][0]);
                 // Remember array of lines cound from zero. End is inclusive.
-                Y.Assert.areSame(134, results["mw.js"][0].start);
-                Y.Assert.areSame(214, results["mw.js"][0].end);
+                Y.Assert.areSame(79, results["mw.js"][0].start);
+                Y.Assert.areSame(159, results["mw.js"][0].end);
 
                 // Now try running on HelloWorld.md
                 source = fs.readFileSync("HelloWorld.md").toString();
@@ -427,12 +427,12 @@ The command line tool provides the bindings to file IO and processing of command
             "node": "0.10.x",
             "npm": "1.2.x"
         },
-        "files": {
+        "files": [
             "README.md",
             "Markdown-Weave.md",
             "Example-1.md",
             "HelloWorld.md"
-        },
+        ],
         "author": "R. S. Doiel",
         "license": "BSD",
         "readmeFilename": "README.md"
