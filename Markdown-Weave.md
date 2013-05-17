@@ -427,6 +427,12 @@ The command line tool provides the bindings to file IO and processing of command
             "node": "0.10.x",
             "npm": "1.2.x"
         },
+        "files": {
+            "README.md",
+            "Markdown-Weave.md",
+            "Example-1.md",
+            "HelloWorld.md"
+        },
         "author": "R. S. Doiel",
         "license": "BSD",
         "readmeFilename": "README.md"
