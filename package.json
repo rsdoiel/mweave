@@ -4,7 +4,7 @@
     "description": "This is an experiment in using Markdown and some concepts from literate programming.",
     "main": "mw.js",
     "bin": {
-        "mweave": "./cli.js"
+        "mweave": "cli.js"
     },
     "scripts": {
         "build": "node build.js",
@@ -33,12 +33,6 @@
         "node": "0.10.x",
         "npm": "1.2.x"
     },
-    "files": [
-        "README.md",
-        "Markdown-Weave.md",
-        "Example-1.md",
-        "HelloWorld.md"
-    ],
     "author": "R. S. Doiel",
     "license": "BSD",
     "readmeFilename": "README.md"

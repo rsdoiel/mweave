@@ -209,7 +209,7 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
                     results = weave.render(source, obj);
 
                 Y.assert(source.length > 0, "Should have some markdown source");
-                Y.Assert.isObject(obj["cli.js"]);
+                Y.Assert.isObject(obj["mw-cli.js"]);
                 Y.assert(obj["cli.js"][0].start > 0);
                 Y.assert(obj["cli.js"][0].end > 0);
 
@@ -398,7 +398,7 @@ The command line tool provides the bindings to file IO and processing of command
         "description": "This is an experiment in using Markdown and some concepts from literate programming.",
         "main": "mw.js",
         "bin": {
-            "mweave": "./cli.js"
+            "mweave": "cli.js"
         },
         "scripts": {
             "build": "node build.js",
@@ -427,12 +427,6 @@ The command line tool provides the bindings to file IO and processing of command
             "node": "0.10.x",
             "npm": "1.2.x"
         },
-        "files": [
-            "README.md",
-            "Markdown-Weave.md",
-            "Example-1.md",
-            "HelloWorld.md"
-        ],
         "author": "R. S. Doiel",
         "license": "BSD",
         "readmeFilename": "README.md"
