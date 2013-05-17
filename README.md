@@ -86,7 +86,7 @@ You can bootstrap with a few Unix commands (_vi_, _sed_, _chmod_, and _node_).
     #!/bin/bash
     npm install shelljs
     vi -e -c "20,79wq! mw-bootstrap.js" README.md
-    sed -i -e "s/    //" mw-bootstrap.js
+    sed -e "s/    //" -i mw-bootstrap.js
     chmod 770 mw-bootstrap.js
     ./mw-bootstrap.js
     npm install
