@@ -202,14 +202,14 @@ Here is some test code for see if mw.js works. This code relies on the YUI3 test
                 Y.Assert.areSame(8, results["helloworld.js"][0].start);
                 Y.Assert.areSame(8, results["helloworld.js"][0].end);
             },
-            "Should render  a parsed object into a new object.": function () {
+            "Should render a parsed object into a new object.": function () {
                 var weave = new mw.Weave(),
                     source = fs.readFileSync("Markdown-Weave.md").toString(),
                     obj = weave.parse(source),
                     results = weave.render(source, obj);
 
                 Y.assert(source.length > 0, "Should have some markdown source");
-                Y.Assert.isObject(obj["mw-cli.js"]);
+                Y.Assert.isObject(obj["cli.js"]);
                 Y.assert(obj["cli.js"][0].start > 0);
                 Y.assert(obj["cli.js"][0].end > 0);
 

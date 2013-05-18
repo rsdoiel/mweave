@@ -35,7 +35,7 @@ YUI({
             Y.Assert.areSame(8, results["helloworld.js"][0].start);
             Y.Assert.areSame(8, results["helloworld.js"][0].end);
         },
-        "Should render  a parsed object into a new object.": function () {
+        "Should render a parsed object into a new object.": function () {
             var weave = new mw.Weave(),
                 source = fs.readFileSync("Markdown-Weave.md").toString(),
                 obj = weave.parse(source),
