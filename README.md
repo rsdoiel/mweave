@@ -3,15 +3,17 @@ Markdown Weave
 
 # What is mw.js?
 
-An experiment in using Markdown and Donald Knuth's literate programming concept.
+An experiment in using Markdown and some of Donald Knuth's literate
+programming concepts.
 
 
 ## Bootstraping mw.js
 
-I like the idea of writing _mw.js_ using _mw.js_.  To do that I wrote a very simple implementation
-of _mv.js_ which I'm calling _mw-bootstrap.js_.  I'm leveraging Markdown syntax via JavaScript to 
-generate the _vi_ commands to extract the code. The source for _mw.js_ will be generate by running
-_mw-bootstrap.js_ on [Markdown-Weave.md](Markdown-Weave.md).
+I like the idea of writing _mw.js_ using _mw.js_.  To do that I wrote a 
+very simple implementation of _mv.js_ which I'm calling _mw-bootstrap.js_.
+I'm leveraging Markdown syntax via JavaScript to generate the _vi_ 
+commands to extract the code. The source for _mw.js_ will be generate by 
+running _mw-bootstrap.js_ on [Markdown-Weave.md](Markdown-Weave.md).
 
 Here is code to bootstrap this whole thing ---
 
@@ -85,7 +87,7 @@ You can bootstrap with a few Unix commands (_vi_, _sed_, _chmod_, and _node_).
 ```shell
     #!/bin/bash
     npm install shelljs
-    vi -e -c "20,79wq! mw-bootstrap.js" README.md
+    vi -e -c "22,81wq! mw-bootstrap.js" README.md
     sed -e "s/    //" -i mw-bootstrap.js
     chmod 770 mw-bootstrap.js
     ./mw-bootstrap.js
