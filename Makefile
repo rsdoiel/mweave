@@ -5,7 +5,7 @@
 
 PROJECT = mweave
 
-MOTTO = "An experiment in simi-literate programming"
+MOTTO = "An experimental literate programming tool"
 
 VERSION = $(shell grep -m 1 'Version =' mweave.go | cut -d\" -f 2)
 
@@ -20,12 +20,15 @@ endif
 
 CLI_NAMES = mweave
 
-build: $(CLI_NAMES)
+build: $(CLI_NAMES) README.md
 
 mweave: bin/mweave$(EXT)
 
 bin/mweave$(EXT): mweave.go cmd/mweave/mweave.go
 	env CGO_ENABLED=0 go build -o bin/mweave$(EXT) cmd/mweave/mweave.go
+
+README.md: bin/mweave$(EXT)
+	./bin/mweave README.mweave
 
 test:
 	go test

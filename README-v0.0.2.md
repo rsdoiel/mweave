@@ -1,20 +1,14 @@
 Markdown Weave
 ==============
 
-This project started out as a NodeJS based project. It is continuing as
-of v0.1.x as a Golang based project. The NodeJS files and process are
-left here for historical reasons and because I'll forget over time.
+This is the README from the versions of _mweave_ based on NodeJS and NPM. There are hear
+for my historical reference only and the NodeJS version of mweave should be considered
+obsolete. RSD, 2018-01-05
 
 # What is mw.js?
 
 An experiment in using Markdown and some of Donald Knuth's literate
 programming concepts.
-
-## And now mweave.go?
-
-Because these days I mostly work in Go not NodeJS and I wanted something
-faster and easier to build cross platform without always having to install
-NodeJS...
 
 
 ## Bootstraping mw.js
@@ -111,5 +105,6 @@ You can bootstrap with a few Unix commands (_vi_, _sed_, _chmod_, and _node_).
 * [Markdown-Weave.md](Markdown-Weave.md) is the source to _mw.js_ and _cli.js_ (i.e. command line tool). Since this is process by _mw-bootstrap.js_ it is not quiet literate yet.
 * [HelloWorld.md](HelloWorld.md) - A simple hello world example.
 * [Example-1.md](Example-1.md) - An example of writing multiple code blocks that form a single JavaScript file.
+
 
 

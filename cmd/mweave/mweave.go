@@ -31,7 +31,10 @@
 package main
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	// My packages
@@ -60,20 +63,128 @@ generate documentation from an mweave document
 
 	// Standard Options
 	showHelp             bool
-	showLicence          bool
+	showLicense          bool
 	showVersion          bool
 	showExamples         bool
-	quitet               bool
+	quiet                bool
+	newLine              bool
 	generateMarkdownDocs bool
 	inputFName           string
 	outputFName          string
 
 	// Application Options
-	weave  bool
-	tangle bool
+	weave   bool
+	tangle  bool
+	astJSON bool
+	astXML  bool
 )
 
 func main() {
 	app := cli.NewCli(mweave.Version)
-	fmt.Println(os.Args[0], "not implemented")
+
+	// Add non-option parameter documentation
+	app.AddParams("MWEAVE_FILENAME")
+
+	// Add Help docs
+	app.AddHelp("description", []byte(description))
+	app.AddHelp("examples", []byte(examples))
+
+	// Standard Options
+	app.BoolVar(&showHelp, "h,help", false, "display help")
+	app.BoolVar(&showLicense, "l,license", false, "display license")
+	app.BoolVar(&showVersion, "v,version", false, "display version")
+	app.BoolVar(&showExamples, "examples", false, "display examples")
+	app.BoolVar(&quiet, "quiet", false, "suppress error messages")
+	app.BoolVar(&generateMarkdownDocs, "generate-markdown-docs", false, "generate Markdown documentation")
+	app.StringVar(&inputFName, "i,input", "", "set input filename (the mweave file)")
+	app.StringVar(&outputFName, "o,output", "", "set output filename")
+
+	// Application Options
+	app.BoolVar(&weave, "w,weave", false, "generate documentations files (e.g. Markdown output)")
+	app.BoolVar(&tangle, "t,tangle", false, "generate source code files (e.g. program code)")
+	app.BoolVar(&astJSON, "ast,json", false, "write out the AST of parsing the mweave file as JSON")
+	app.BoolVar(&astXML, "xml", false, "write out the AST of parsing the mweave file as JSON")
+
+	// Process environment and options
+	app.Parse()
+	args := app.Args()
+
+	if len(args) > 0 {
+		inputFName = args[0]
+	}
+	if len(args) > 1 {
+		outputFName = args[1]
+	}
+
+	// Setup IO
+	var err error
+
+	app.Eout = os.Stderr
+
+	app.In, err = cli.Open(inputFName, os.Stdin)
+	cli.ExitOnError(app.Eout, err, quiet)
+	defer cli.CloseFile(inputFName, app.In)
+
+	app.Out, err = cli.Create(outputFName, os.Stdout)
+	cli.ExitOnError(app.Eout, err, quiet)
+	defer cli.CloseFile(outputFName, app.Out)
+
+	// Process options
+	if generateMarkdownDocs {
+		app.GenerateMarkdownDocs(app.Out)
+		os.Exit(0)
+	}
+	if showHelp || showExamples {
+		if len(args) > 0 {
+			fmt.Fprintln(app.Out, app.Help(args...))
+		} else {
+			app.Usage(app.Out)
+		}
+		os.Exit(0)
+	}
+	if showLicense {
+		fmt.Fprintln(app.Out, app.License())
+		os.Exit(0)
+	}
+	if showVersion {
+		fmt.Fprintln(app.Out, app.Version())
+		os.Exit(0)
+	}
+
+	// ReadAll of input
+	src, err := ioutil.ReadAll(app.In)
+	cli.ExitOnError(app.Eout, err, quiet)
+	// Parse input
+	mwDoc, err := mweave.Parse(src)
+	cli.ExitOnError(app.Eout, err, quiet)
+
+	if astJSON {
+		src, err = json.MarshalIndent(mwDoc, "", "    ")
+		cli.ExitOnError(app.Eout, err, quiet)
+		fmt.Fprintf(app.Out, "%s", src)
+	}
+
+	if astXML {
+		src, err = xml.MarshalIndent(mwDoc, "", "   ")
+		cli.ExitOnError(app.Eout, err, quiet)
+		fmt.Fprintf(app.Out, "%s", src)
+	}
+
+	if weave {
+		err = mwDoc.Weave(app.Eout)
+		if err != nil {
+			fmt.Fprintf(app.Eout, "%s", err)
+		}
+	}
+
+	if tangle {
+		err = mwDoc.Tangle(app.Eout)
+		if err != nil {
+			fmt.Fprintf(app.Eout, "%s", err)
+		}
+	}
+
+	if newLine {
+		fmt.Fprintln(app.Out, "")
+	}
 }

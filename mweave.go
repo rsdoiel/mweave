@@ -31,18 +31,46 @@
 package mweave
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io"
 )
 
 const (
+	// Version of package
 	Version = `v0.1.0-dev`
+
+	// Constants used to identify type
+	UnknownType = iota
+	DirectiveType
 )
 
-func Weave(in io.Reader, out io.Writer, eout io.Writer) error {
+type Document struct {
+	XMLName  xml.Name
+	Elements []*Element `xml:"elements,omitempty" json:"elements,omitempty"`
+}
+
+type Element struct {
+	XMLName    xml.Name
+	Type       int             `xml:"type,omitempty" json:"type,omitempty"`
+	Directives []xml.Directive `xml:"directive,omitempty", json:"directive,omitempty"`
+	Comments   []xml.Comment   `xml:",any,comments" json:"comments,omitempty"`
+	Values     []xml.CharData  `xml:",any,chardata" json:"value,omitempty"`
+	Attrs      []xml.Attr      `xml:",any,attr" json:"attr,omitempty"`
+}
+
+func (elem *Element) MarshalJSON() ([]byte, error) {
+	return nil, fmt.Errorf("MarshalJSON() not implemented for *Element")
+}
+
+func Parse(src []byte) (*Document, error) {
+	return nil, fmt.Errorf("Parse() not implemented.")
+}
+
+func (doc *Document) Weave(eout io.Writer) error {
 	return fmt.Errorf("Weave() not implemented")
 }
 
-func Tangle(in io.Reader, out io.Writer, eout io.Writer) error {
+func (doc *Document) Tangle(eout io.Writer) error {
 	return fmt.Errorf("Tangle() not implemented")
 }
