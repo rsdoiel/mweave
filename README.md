@@ -1,10 +1,20 @@
 Markdown Weave
 ==============
 
+This project started out as a NodeJS based project. It is continuing as
+of v0.1.x as a Golang based project. The NodeJS files and process are
+left here for historical reasons and because I'll forget over time.
+
 # What is mw.js?
 
 An experiment in using Markdown and some of Donald Knuth's literate
 programming concepts.
+
+## And now mweave.go?
+
+Because these days I mostly work in Go not NodeJS and I wanted something
+faster and easier to build cross platform without always having to install
+NodeJS...
 
 
 ## Bootstraping mw.js

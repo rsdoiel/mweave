@@ -1,7 +1,7 @@
 {
     "name": "mweave",
-    "version": "0.0.2",
-    "description": "This is an experiment in using Markdown and some concepts from literate programming.",
+    "version": "0.0.3",
+    "description": "This is an experiment in using Markdown and some concepts from literate programming. This is the last version written for NodeJS",
     "main": "mw.js",
     "bin": {
         "mweave": "cli.js"
@@ -15,8 +15,8 @@
         "yuitest": "0.7.x"
     },
     "dependencies": {
-        "handlebars": "4.0.x",
-        "marked": "0.3.9",
+        "handlebars": ">4.0.x",
+        "marked": ">0.3.9",
         "opt": "0.1.x",
         "shelljs": "0.1.x"
     },
