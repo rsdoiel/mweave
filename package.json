@@ -34,6 +34,6 @@
         "npm": "1.2.x"
     },
     "author": "R. S. Doiel",
-    "license": "BSD",
+    "license": "BSD 2-Clause",
     "readmeFilename": "README.md"
 }
