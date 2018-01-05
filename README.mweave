@@ -1,6 +1,5 @@
-
+<!--mweave:begin "REAMDE.md" 0 -->
 # mweave
-
 
 _mweave_ is a literate programming experiment I started by in 2012. I liked
 Donald Knuth's ideas about [literate programming](https://en.wikipedia.org/wiki/Literate_programming)
@@ -46,25 +45,26 @@ At it's core _mweave_ is a pre-processor that looks for _mweave_ directives. Unl
 version _mweave_ directives are embedded in HTML/XML style comments.
 
 ```
-    <!--mweave begin:"HelloWorld.md" 0 -->
+    <!--mweave:begin "HelloWorld.md" 0 -->
     # Hello World!
 
     This is an example of an embedded document to be extracted by 
     [mweave](https://github.com/rsdoiel/mweave).
-    <!--mweave end:"HelloWorld.md" 0 -->
+    <!--mweave:end -->
 ```
 
 _mweave_ reads in the entire source document splitting it up based on the directives it encounters.
-There are two directives - *begin:* and *end:*.  Both take one required parameter, the filename to
-write to and an optional second which controls the order the final document is rendered in. Noramlly
-it is an integer. Currently I have no other directives planned and do not plan on implemented any sort
-of macro system. The _mweave_ directives are expected to be at the start of the line. They can span
-lines as whitespace is used to split the parameters up before passing to the parameters.
+There are two directives - *mweave:begin* and *mweave:end*.  *mweave:begin* takes two required 
+parameters, the filename (string) and an order value (an integer). The ordering value is used by
+tangle to order blocks of texts associated with the filename. *mweave:end* takes no parameter.
+Currently I have no other directives planned and do not plan on implemented any sort of macro 
+system. The _mweave_ directives are expected to be the first non-space elemnt on the line. 
+They take up a whole line. 
 
-As you can see this is still rediculiously simple. Something that can be implemented in an morning 
-or two hacking. That is intensional. I am trying to sort out how simple a tool I can write and
-still support literate programming. My hypothis is that if the tool is simple enough I might actually
-use it and find it useful.
+This experiment is still rediculiously simple like 2012. Something that can be implemented in an 
+morning or two hacking. I am trying to sort out how simple a tool I can write and still support 
+literate programming. My hypothis is that if the tool is simple enough I might actually use it and 
+find it more useful and interesting to maintain.
 
 ## Requirements
 
@@ -76,4 +76,4 @@ _mweave_ is "go get"-able.
     go get -u github.com/rsodiel/mweave/...
 ```
 
-
+<!--mweave:end "README.md" -->

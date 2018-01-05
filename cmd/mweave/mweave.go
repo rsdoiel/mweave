@@ -95,6 +95,7 @@ func main() {
 	app.BoolVar(&showVersion, "v,version", false, "display version")
 	app.BoolVar(&showExamples, "examples", false, "display examples")
 	app.BoolVar(&quiet, "quiet", false, "suppress error messages")
+	app.BoolVar(&newLine, "nl,newline", false, "add a trailing newline")
 	app.BoolVar(&generateMarkdownDocs, "generate-markdown-docs", false, "generate Markdown documentation")
 	app.StringVar(&inputFName, "i,input", "", "set input filename (the mweave file)")
 	app.StringVar(&outputFName, "o,output", "", "set output filename")
@@ -158,30 +159,27 @@ func main() {
 	mwDoc, err := mweave.Parse(src)
 	cli.ExitOnError(app.Eout, err, quiet)
 
-	if astJSON {
+	switch {
+	case astJSON:
 		src, err = json.MarshalIndent(mwDoc, "", "    ")
 		cli.ExitOnError(app.Eout, err, quiet)
 		fmt.Fprintf(app.Out, "%s", src)
-	}
-
-	if astXML {
+	case astXML:
 		src, err = xml.MarshalIndent(mwDoc, "", "   ")
 		cli.ExitOnError(app.Eout, err, quiet)
 		fmt.Fprintf(app.Out, "%s", src)
+	case weave == false && tangle == false:
+		fmt.Fprintf(app.Out, "OK")
 	}
 
 	if weave {
 		err = mwDoc.Weave(app.Eout)
-		if err != nil {
-			fmt.Fprintf(app.Eout, "%s", err)
-		}
+		cli.ExitOnError(app.Eout, err, quiet)
 	}
 
 	if tangle {
 		err = mwDoc.Tangle(app.Eout)
-		if err != nil {
-			fmt.Fprintf(app.Eout, "%s", err)
-		}
+		cli.ExitOnError(app.Eout, err, quiet)
 	}
 
 	if newLine {

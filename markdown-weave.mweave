@@ -409,8 +409,8 @@ The command line tool provides the bindings to file IO and processing of command
             "yuitest": "0.7.x"
         },
         "dependencies": {
-            "handlebars": "1.0.x",
-            "marked": "0.2.x",
+            "handlebars": ">=4.0.11",
+            "marked": ">=0.3.9",
             "opt": "0.1.x",
             "shelljs": "0.1.x"
         },
@@ -424,8 +424,8 @@ The command line tool provides the bindings to file IO and processing of command
           "javascript"
         ],
         "engines": {
-            "node": "0.10.x",
-            "npm": "1.2.x"
+            "node": ">=8.9.4",
+            "npm": ">=r5.4.2"
         },
         "author": "R. S. Doiel",
         "license": "BSD",

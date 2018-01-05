@@ -27,8 +27,8 @@ mweave: bin/mweave$(EXT)
 bin/mweave$(EXT): mweave.go cmd/mweave/mweave.go
 	env CGO_ENABLED=0 go build -o bin/mweave$(EXT) cmd/mweave/mweave.go
 
-README.md: bin/mweave$(EXT)
-	./bin/mweave README.mweave
+README.md: bin/mweave$(EXT) README.mweave
+	./bin/mweave -tangle README.mweave
 
 test:
 	go test

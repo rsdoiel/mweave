@@ -1,41 +1,52 @@
+<!--mweave:begin "example-1.md" 0 -->
 
 # Example 1, write code as a series of blocks
 
 One of the tenants of literate programing is the ability
-to write prose then generate code. _mweae_ uses Markdown's
+to write prose then generate code. _mweave_ uses Markdown's
 code blocks for that.
 
-[Here is our first block](example-1.js)
+[Add our first block](example-1.js)
+<!--mweave:begin "example-1.js" 0 -->
 ```JavaScript
     /**
      * example-1.js
      */
     /*jslint node: true, indent: 4 */
 ```
+<!--mweave:end -->
 
 In this block I just setup a command header and a _jslint_ directive.
 
 [Now lets get some code going](example-1.js)
+<!--mweave:begin "example-1.js" 1 -->
 ```JavaScript
     console.log("Caculating 1 + 1");
     var accumulator = 0;
     accumulator = 1 + 1;
 ```
+<!--mweave:end -->
 
 Now that we done a caculation let us send that to the console.
 
 [Write the results](example-1.js)
+<!--mweave:begin "example-1.js" 2 -->
 ```JavaScript
     console.log("And the answer is", accumulator);
 ```
+<!--mweave:end -->
 
 Finally let us tell the viewer we are done.
 
 [Last bits of program](example-1.js)
+<!--mweave:begin "example-1.js" 3 -->
 ```JavaScript
     console.log("All done!");
     process.exit(0);
 ```
+<!--mweave:end -->
 
-Running this through _mweave_ should produce a single file called _example-1.js_
+Running `mweave -tangle Example-1.mweave` should produce a single file called _example-1.js_
+Running `mweave -weave Example-1.mweave` should render _example-1.md_
 
+<!--mweave:end -->
