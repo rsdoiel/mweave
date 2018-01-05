@@ -15,8 +15,8 @@
         "yuitest": "0.7.x"
     },
     "dependencies": {
-        "handlebars": "1.0.x",
-        "marked": "0.2.x",
+        "handlebars": "4.0.x",
+        "marked": "0.3.9",
         "opt": "0.1.x",
         "shelljs": "0.1.x"
     },
