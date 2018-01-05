@@ -30,6 +30,19 @@
 //
 package mweave
 
+import (
+	"fmt"
+	"io"
+)
+
 const (
 	Version = `v0.1.0-dev`
 )
+
+func Weave(in io.Reader, out io.Writer, eout io.Writer) error {
+	return fmt.Errorf("Weave() not implemented")
+}
+
+func Tangle(in io.Reader, out io.Writer, eout io.Writer) error {
+	return fmt.Errorf("Tangle() not implemented")
+}

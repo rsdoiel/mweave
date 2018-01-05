@@ -1,4 +1,17 @@
 
+Converting from NodeJS to Goland:
+
++ extension would be .mw or .mweave
++ initial go port to target generating Markdown and source code files from mweave document
+    + someday maybe render ePub and PDF?
+    + someday maybe render .TeX and .LaTeX?
++ option for code block should support filename and fragment number
++ option to specify "paging" to different files (e.g. for generating slides)
++ option to generate "front matter" for markdown and source code
++ option to handle "front matter" like fountain
++ option to render AST of mweave for external precessing
+
+
 Some feature ideas:
 
 + Use the pound sign in a URL to indicate block order. This would allow code to be written out of sequence as well as allow literate text to wrap blocks of code going to the same file.

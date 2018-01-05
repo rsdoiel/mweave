@@ -33,8 +33,47 @@ package main
 import (
 	"fmt"
 	"os"
+
+	// My packages
+	"github.com/rsdoiel/mweave"
+
+	// Caltech Library packages
+	"github.com/caltechlibrary/cli"
+)
+
+var (
+	description = `
+mweave is and experimental literate programming tool. It is 
+inspired by Knuth's ideas targeting Markdown like markup rather
+than TeX.
+`
+
+	examples = `
+generate source files from an mweave document
+
+    mweave -i document.mweave -tangle
+
+generate documentation from an mweave document
+
+    mweave -i documemt.mweave -weave
+`
+
+	// Standard Options
+	showHelp             bool
+	showLicence          bool
+	showVersion          bool
+	showExamples         bool
+	quitet               bool
+	generateMarkdownDocs bool
+	inputFName           string
+	outputFName          string
+
+	// Application Options
+	weave  bool
+	tangle bool
 )
 
 func main() {
+	app := cli.NewCli(mweave.Version)
 	fmt.Println(os.Args[0], "not implemented")
 }
