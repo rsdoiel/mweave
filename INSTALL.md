@@ -27,7 +27,7 @@ For all the released version go to the project page on Github and click latest r
 | Linux/Intel | mweave-VERSION_NUMBER-linux-amd64.zip   |
 | Raspbery Pi (ARM7) | mweave-VERSION_NUMBER-raspbian-arm7.zip |
 | Raspbery Pi (ARM6) | mweave-VERSION_NUMBER-raspbian-arm6.zip |
-| Pine64      | mweave-VERSION_NUMBER-linux-arm64.zip   |
+| Pine64 (Linux/ARM64)      | mweave-VERSION_NUMBER-linux-arm64.zip   |
 
 
 ## The basic recipe

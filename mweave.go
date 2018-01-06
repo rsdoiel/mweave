@@ -190,16 +190,13 @@ func assemble(m map[string]string) []byte {
 			for _, s := range strings.Split(val, "\n") {
 				if shiftLeft == false && strings.HasPrefix(s, "```") {
 					shiftLeft = true
-					fmt.Println("DEBUG shiftLeft true")
 					skip = true
 				} else if shiftLeft == true && strings.HasPrefix(s, "```") {
 					shiftLeft = false
-					fmt.Println("DEBUG shiftLeft false")
 					skip = true
 				}
 				if shiftLeft {
 					s = strings.TrimPrefix(s, "    ")
-					fmt.Printf("DEBUG strings.TrimLeft(%q, \"    \")\n", s)
 				}
 				if skip {
 					skip = false
