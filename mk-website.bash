@@ -25,12 +25,15 @@ if [[ "${1}" != "" ]]; then
 	TITLE="${1}"
 fi
 
+echo "Building index.html from README.md and nav.md"
 mkpage "nav=nav.md" "content=README.md" page.tmpl >index.html
 git add index.html
 
+echo "Building license.html from LICENSE and nav.md"
 mkpage "nav=nav.md" "content=markdown:$(cat LICENSE)" page.tmpl >license.html
 git add license.html
 
+echo "Building install.html from INSTALL.md and nav.md"
 mkpage "nav=nav.md" "content=INSTALL.md" page.tmpl >install.html
 git add install.html
 
@@ -40,7 +43,9 @@ findfile -s ".md" . | while read -r P; do
 	PREFIX="${DNAME:0:4}"
 
 	if [[ "${PREFIX}" == "dist" || "${PREFIX}" == "test" || "${FNAME}" == "nav.md" || "${FNAME}" == "README.md" || "${FNAME}" == "INSTALL.md" || "${FNAME}" == "TODO.md" || "${FNAME}" == "IDEAS.md" ]]; then
-		echo "Skipping $P"
+		# Skip render
+        #echo "Skipping $P"
+        echo -n ""
 	else
 		HTML_NAME="${DNAME}/$(basename "$FNAME" ".md").html"
 		NAV=$(FindNavMD "$DNAME")
