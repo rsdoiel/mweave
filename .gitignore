@@ -24,7 +24,5 @@
 bin/
 dist/
 testout/
-demos/*.js
-demos/*.md
 IDEAS.html
 TODO.html

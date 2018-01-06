@@ -45,9 +45,11 @@ both documentation (e.g. Markdown output) and source code file(s).
 At it's core _mweave_ is a pre-processor that looks for _mweave_ directives. Unlike the 2012
 version _mweave_ directives are embedded in HTML/XML style comments.
 
-As an example you can render a "helloworld" python script from [helloworld.mweave](demos/helloworld.mweave)
-Documentation would wind up as _helloworld.md_ from a _helloworld.mweave_ file. Below is an example
-of what _helloworld.mweave_ might look like.
+As an example you can render a [helloworld](demos/helloworld.py) python script from [helloworld.mweave](demos/helloworld.mweave) using `-tangle` and render a [helloworld](demos/helloworld.md) Markdown page by using
+`-weave`. Processing that markdown using a Markdown process like [mkpage](https://caltechlibrary.github.io/mkpage)
+would give you the final [helloworld](demos/helloworld.html) page.
+
+Here is the example mweave file--
 
 <!--mweave:begin "demos/helloworld.mweave" 0 -->
 ```
@@ -64,7 +66,8 @@ of what _helloworld.mweave_ might look like.
 ```
 <!--mweave:end -->
 
-Here are the commands to render _helloworld.md_ and _helloworld.py_ from our _helloworld.mweave_ source.
+Here are the commands to render [helloworld.md](demos/helloworld.md) and [helloworld.py](demos/helloworld.py)
+from our [helloworld.mweave](demos/helloworld.mweave) source.
 
 ```shell
     mweave -weave -i helloworld.mweave -o helloworld.md

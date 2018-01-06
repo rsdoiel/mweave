@@ -53,7 +53,7 @@ clean:
 generate_usage_pages: mweave
 	bash gen-usage-pages.bash
 
-website: generate_usage_pages
+website: generate_usage_pages README.md
 	bash mk-website.bash
 
 publish: generate_usage_pages
