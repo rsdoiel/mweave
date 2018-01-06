@@ -70,10 +70,11 @@ display mweave parse results as JSON
 	outputFName          string
 
 	// Application Options
-	weave   bool
-	tangle  bool
-	astJSON bool
-	astXML  bool
+	weave       bool
+	tangle      bool
+	astJSON     bool
+	astXML      bool
+	applyMacros bool
 )
 
 func main() {
@@ -102,6 +103,7 @@ func main() {
 	app.BoolVar(&tangle, "t,tangle", false, "generate source code files (e.g. program code)")
 	app.BoolVar(&astJSON, "ast,json", false, "write out the AST of parsing the mweave file as JSON")
 	app.BoolVar(&astXML, "xml", false, "write out the AST of parsing the mweave file as JSON")
+	app.BoolVar(&applyMacros, "macros", true, "apply macros before further processing, defaults to true")
 
 	// Process environment and options
 	app.Parse()
@@ -155,6 +157,12 @@ func main() {
 	// Parse input
 	doc, err := mweave.Parse(src)
 	cli.ExitOnError(app.Eout, err, quiet)
+
+	// If shorthand is used then process with it.
+	if applyMacros {
+		src, err = mweave.ApplyMacros(src)
+		cli.ExitOnError(app.Eout, err, quiet)
+	}
 
 	switch {
 	case astJSON:
