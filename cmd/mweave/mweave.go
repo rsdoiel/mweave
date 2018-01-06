@@ -154,15 +154,16 @@ func main() {
 	// ReadAll of input
 	src, err := ioutil.ReadAll(app.In)
 	cli.ExitOnError(app.Eout, err, quiet)
-	// Parse input
-	doc, err := mweave.Parse(src)
-	cli.ExitOnError(app.Eout, err, quiet)
 
-	// If shorthand is used then process with it.
+	// If apply *before* parsing with mweave.Parse()
 	if applyMacros {
 		src, err = mweave.ApplyMacros(src)
 		cli.ExitOnError(app.Eout, err, quiet)
 	}
+
+	// Parse input
+	doc, err := mweave.Parse(src)
+	cli.ExitOnError(app.Eout, err, quiet)
 
 	switch {
 	case astJSON:

@@ -24,7 +24,7 @@ build: $(CLI_NAMES) README.md
 
 mweave: bin/mweave$(EXT)
 
-bin/mweave$(EXT): mweave.go cmd/mweave/mweave.go
+bin/mweave$(EXT): mweave.go macros.go cmd/mweave/mweave.go
 	env CGO_ENABLED=0 go build -o bin/mweave$(EXT) cmd/mweave/mweave.go
 
 README.md: bin/mweave$(EXT) README.mweave

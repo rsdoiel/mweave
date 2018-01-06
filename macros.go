@@ -17,12 +17,15 @@ import (
 func ApplyMacros(text []byte) ([]byte, error) {
 	output := []string{}
 	vm := shorthand.New()
+	vm.SetPrompt("")
+
 	// This is ugly because shorthand works with lines of strings...
 	for i, line := range strings.Split(fmt.Sprintf("%s", text), "\n") {
 		if s, err := vm.Eval(line, i); err == nil {
 			output = append(output, s)
+		} else {
+			return nil, err
 		}
-
 	}
 	return []byte(strings.Join(output, "\n")), nil
 }

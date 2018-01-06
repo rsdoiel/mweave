@@ -7,7 +7,8 @@
 
 + [ ] Build out test coverage
 + [ ] Integrate [shorthand](https://github.com/rsdoiel/shorthand) as mweave's macro system
-    + [ ] shorthand should be a cli option and execute before mweave.Parse() if selected
+    + [x] shorthand should be a cli option and execute before mweave.Parse() if selected
+    + [ ] Add shorthand related options to mweave (e.g. so we can pre-load macro libraries)
 + [ ] Bump version number to v0.1.1 for Go implementation
 
 
