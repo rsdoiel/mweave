@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function cleanUpHTML() {
-	findfile -s ".html" . | while read P; do
+	findfile -s ".html" . | while read -r P; do
 		rm "$P"
 	done
 }
@@ -34,19 +34,18 @@ git add license.html
 mkpage "nav=nav.md" "content=INSTALL.md" page.tmpl >install.html
 git add install.html
 
-
-findfile -s ".md" . | while read P; do
+findfile -s ".md" . | while read -r P; do
 	DNAME="$(dirname "$P")"
 	FNAME=$(basename "$P")
-    PREFIX="${DNAME:0:4}"
+	PREFIX="${DNAME:0:4}"
 
-	if [[ "${PREFIX}" != "dist" && "${PREFIX}" != "node" && "${PREFIX}" != "test" && "${FNAME}" != "nav.md" && "${FNAME}" != "README.md" && "${FNAME}" != "INSTALL.md"  ]]; then
-        HTML_NAME="${DNAME}/$(basename "$FNAME" ".md").html"
+	if [[ "${PREFIX}" == "dist" || "${PREFIX}" == "test" || "${FNAME}" == "nav.md" || "${FNAME}" == "README.md" || "${FNAME}" == "INSTALL.md" || "${FNAME}" == "TODO.md" || "${FNAME}" == "IDEAS.md" ]]; then
+		echo "Skipping $P"
+	else
+		HTML_NAME="${DNAME}/$(basename "$FNAME" ".md").html"
 		NAV=$(FindNavMD "$DNAME")
 		echo "Building $HTML_NAME from $DNAME/$FNAME and $NAV"
 		mkpage "title=text:${TITLE}" "nav=${NAV}" "content=${DNAME}/${FNAME}" page.tmpl >"${HTML_NAME}"
 		git add "${HTML_NAME}"
-	else
-		echo "Skipping $P"
 	fi
 done
