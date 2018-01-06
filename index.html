@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+
+</header>
+<section>
+<h1>mweave</h1>
+
+<p><em>mweave</em> is a literate programming experiment I started by in 2012. I liked
+Donald Knuth&rsquo;s ideas about <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a>
+but didn&rsquo;t wish to write in TeX.  Today I mostly write documents
+in an extended version of Markdown or in the case of screenplay&rsquo;s Fountain.
+While TeX (and particularly LaTeX) remain really cool in my thinking I just find
+it easier to type and proof read in a simpler form of markup.</p>
+
+<h2>History</h2>
+
+<h3>Where mweave started 2012</h3>
+
+<p>This project started out as an experiment to write a document generator written
+for NodeJS&rsquo;s in JavaScript. While I thought of it as &ldquo;literate programming&rdquo; what
+I implemented was really just an inside out document generator.  Code blocks that were
+preceeded by a link were scraped and written to a file indicated by the targetted link.
+I did not use the concepts of &ldquo;tangle&rdquo; and &ldquo;weave&rdquo; individually and I didn&rsquo;t
+support the arbitrary ordering of code blocks when generating files.</p>
+
+<p>My bootstrap was written in a Bash script that would process the README.md file
+using <em>vi</em>, <em>sed</em>, to generate a <em>mw-bootstrap.js</em> and then <em>npm</em> to build it.
+In the end my initial experiment failed because I failed to use it.</p>
+
+<p>I stopped the experiment sometime in 2013. It was not a success as I did not find
+it compelling enough to use in practice. It was a fun thing to write and think about.
+Eventually I moved on from NodeJS/JavaScript to other development languages and projects.
+Of course cool things like <a href="https://jupyter.org/">Jupyter Notebooks</a> happened as well.</p>
+
+<h3>mweave in January, 2018</h3>
+
+<p>Today I find myself working in a Research Library and literate programming is again
+calling to me.  This experiment builds on the 2012 ideas but now is implemented in Golang.
+We&rsquo;ll see if this moves beyond a toy program in the coming years. RSD, 2018-01-05</p>
+
+<h2>The experiment</h2>
+
+<p><em>mweave</em> is a Golang package and command line program. It provides both &ldquo;tangle&rdquo; and
+&ldquo;weave&rdquo; functions that are expected in literate programming tools today. An <em>mweave</em>
+file is presumed to be a UTF-8 plain text file with an extension of &ldquo;.mweave&rdquo; or &ldquo;.mw&rdquo;.
+Documentation is rendered to Markdown file(s) and source to the specified source code files.
+It is still one command but by default both documentation and source are generated.
+At it&rsquo;s core <em>mweave</em> is a pre-processor that looks for <em>mweave</em> directives. Unlike the 2012
+version <em>mweave</em> directives are embedded in HTML/XML style comments.</p>
+
+<pre><code>    &lt;!--mweave:begin &quot;HelloWorld.md&quot; 0 --&gt;
+    # Hello World!
+
+    This is an example of an embedded document to be extracted by 
+    [mweave](https://github.com/rsdoiel/mweave).
+    &lt;!--mweave:end --&gt;
+</code></pre>
+
+<p><em>mweave</em> reads in the entire source document splitting it up based on the directives it encounters.
+There are two directives - <em>mweave:begin</em> and <em>mweave:end</em>.  <em>mweave:begin</em> takes two required
+parameters, the filename (string) and an order value (an integer). The ordering value is used by
+tangle to order blocks of texts associated with the filename. <em>mweave:end</em> takes no parameter.
+Currently I have no other directives planned and do not plan on implemented any sort of macro
+system. The <em>mweave</em> directives are expected to be the first non-space elemnt on the line.
+They take up a whole line.</p>
+
+<p>This experiment is still rediculiously simple like 2012. Something that can be implemented in an
+morning or two hacking. I am trying to sort out how simple a tool I can write and still support
+literate programming. My hypothis is that if the tool is simple enough I might actually use it and
+find it more useful and interesting to maintain.</p>
+
+<h2>Requirements</h2>
+
+<ul>
+<li>Golang version 1.9.2 or better</li>
+</ul>
+
+<p><em>mweave</em> is &ldquo;go get&rdquo;-able.</p>
+
+<pre><code class="language-shell">    go get -u github.com/rsodiel/mweave/...
+</code></pre>
+
+</section>
+<nav>
+<ul>
+<li><a href="/">HOME</a></li>
+<li><a href="./">README</a></li>
+<li><a href="license.html">LICENSE</a></li>
+<li><a href="install.html">Install</a></li>
+<li><a href="docs/">Documentation</a></li>
+<li><a href="TODO.html">TODO</a></li>
+<li><a href="https://github.com/rsdoiel/opml">Github</a></li>
+</ul>
+
+</nav>
+<footer>
+copyright (c) 2018 all rights reserved.
+<a href="https://github.com/rsdoiel/opml/releases/latest">Released</a> under the <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>
+</footer>
+</body>
+</html>

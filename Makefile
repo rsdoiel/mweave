@@ -28,7 +28,7 @@ bin/mweave$(EXT): mweave.go cmd/mweave/mweave.go
 	env CGO_ENABLED=0 go build -o bin/mweave$(EXT) cmd/mweave/mweave.go
 
 README.md: bin/mweave$(EXT) README.mweave
-	./bin/mweave -tangle README.mweave
+	./bin/mweave -weave -i README.mweave -o README.md
 
 test:
 	go test
@@ -46,12 +46,14 @@ save:
 clean:
 	if [ -d bin ]; then rm -fR bin; fi
 	if [ -d dist ]; then rm -fR dist; fi
+	if [ -d node_modules ]; then rm -fR node_modules; fi
+
 
 generate_usage_pages: mweave
 	bash gen-usage-pages.bash
 
 website:
-	bash mk-website.bash $(PROJECT) $(MOTTO) $(VERSION)
+	bash mk-website.bash
 
 publish: generate_usage_pages
 	bash mk-website.bash

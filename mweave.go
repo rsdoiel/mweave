@@ -168,8 +168,14 @@ func Parse(src []byte) (*Document, error) {
 	return doc, nil
 }
 
-func (doc *Document) Weave(eout io.Writer) error {
-	return fmt.Errorf("Weave() not implemented")
+// Weave will transform the weave document into a plain text document.
+func (doc *Document) Weave(out, eout io.Writer) error {
+	for _, elem := range doc.Elements {
+		if elem.Type == PlainText || elem.Type == EmptyBlock {
+			fmt.Fprint(out, elem.Value)
+		}
+	}
+	return nil
 }
 
 func (doc *Document) Tangle(eout io.Writer) error {

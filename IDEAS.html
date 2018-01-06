@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+
+</header>
+<section>
+<p>Converting from NodeJS to Goland:</p>
+
+<ul>
+<li>extension would be .mw or .mweave</li>
+<li>initial go port to target generating Markdown and source code files from mweave document
+
+<ul>
+<li>someday maybe render ePub and PDF?</li>
+<li>someday maybe render .TeX and .LaTeX?</li>
+</ul></li>
+<li>option for code block should support filename and fragment number</li>
+<li>option to specify &ldquo;paging&rdquo; to different files (e.g. for generating slides)</li>
+<li>option to generate &ldquo;front matter&rdquo; for markdown and source code</li>
+<li>option to handle &ldquo;front matter&rdquo; like fountain</li>
+<li>option to render AST of mweave for external precessing</li>
+</ul>
+
+<p>Some feature ideas:</p>
+
+<ul>
+<li>Use the pound sign in a URL to indicate block order. This would allow code to be written out of sequence as well as allow literate text to wrap blocks of code going to the same file.</li>
+
+<li><p>Embed a comment in the render code file(s) that indicate where they came from in the Markdown document</p>
+
+<ul>
+<li>e.g. /*mweave 2,14 myMardownFile.md */</li>
+</ul></li>
+
+<li><p>Add source map support</p></li>
+
+<li><p>Add support for name of file to be rendered to end block quote rather than be immediately before it.</p></li>
+
+<li><p>Figure out a way to have multiple blocks accumulate but output only the last link to the final version</p></li>
+</ul>
+
+<h1>Reference</h1>
+
+<ul>
+<li><a href="http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/">Source Maps background</a> - a littled dated, but background never the less</li>
+<li><a href="https://github.com/ryanseddon/source-map/wiki/Source-maps%3A-languages,-tools-and-other-info">Github repo</a> about source maps</li>
+<li><a href="https://github.com/mozilla/source-map/">Mozilla Source Map project</a></li>
+<li><a href="https://github.com/mishoo/UglifyJS2">UglifyJS2 and source maps</a></li>
+</ul>
+
+</section>
+<nav>
+<ul>
+<li><a href="/">HOME</a></li>
+<li><a href="./">README</a></li>
+<li><a href="license.html">LICENSE</a></li>
+<li><a href="install.html">Install</a></li>
+<li><a href="docs/">Documentation</a></li>
+<li><a href="TODO.html">TODO</a></li>
+<li><a href="https://github.com/rsdoiel/opml">Github</a></li>
+</ul>
+
+</nav>
+<footer>
+copyright (c) 2018 all rights reserved.
+<a href="https://github.com/rsdoiel/opml/releases/latest">Released</a> under the <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>
+</footer>
+</body>
+</html>

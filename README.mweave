@@ -1,4 +1,4 @@
-<!--mweave:begin "REAMDE.md" 0 -->
+
 # mweave
 
 _mweave_ is a literate programming experiment I started by in 2012. I liked
@@ -44,6 +44,7 @@ It is still one command but by default both documentation and source are generat
 At it's core _mweave_ is a pre-processor that looks for _mweave_ directives. Unlike the 2012
 version _mweave_ directives are embedded in HTML/XML style comments.
 
+<!--mweave:begin "HelloWorld.md" 0 -->
 ```
     <!--mweave:begin "HelloWorld.md" 0 -->
     # Hello World!
@@ -52,6 +53,7 @@ version _mweave_ directives are embedded in HTML/XML style comments.
     [mweave](https://github.com/rsdoiel/mweave).
     <!--mweave:end -->
 ```
+<!--mweave:end -->
 
 _mweave_ reads in the entire source document splitting it up based on the directives it encounters.
 There are two directives - *mweave:begin* and *mweave:end*.  *mweave:begin* takes two required 
@@ -76,4 +78,3 @@ _mweave_ is "go get"-able.
     go get -u github.com/rsodiel/mweave/...
 ```
 
-<!--mweave:end "README.md" -->

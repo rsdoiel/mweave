@@ -156,29 +156,31 @@ func main() {
 	src, err := ioutil.ReadAll(app.In)
 	cli.ExitOnError(app.Eout, err, quiet)
 	// Parse input
-	mwDoc, err := mweave.Parse(src)
+	doc, err := mweave.Parse(src)
 	cli.ExitOnError(app.Eout, err, quiet)
 
 	switch {
 	case astJSON:
-		src, err = json.MarshalIndent(mwDoc, "", "    ")
+		src, err = json.MarshalIndent(doc, "", "    ")
 		cli.ExitOnError(app.Eout, err, quiet)
 		fmt.Fprintf(app.Out, "%s", src)
 	case astXML:
-		src, err = xml.MarshalIndent(mwDoc, "", "   ")
+		src, err = xml.MarshalIndent(doc, "", "   ")
 		cli.ExitOnError(app.Eout, err, quiet)
 		fmt.Fprintf(app.Out, "%s", src)
 	case weave == false && tangle == false:
 		fmt.Fprintf(app.Out, "OK")
 	}
 
+	// Render Markdown outputs
 	if weave {
-		err = mwDoc.Weave(app.Eout)
+		err = doc.Weave(app.Out, app.Eout)
 		cli.ExitOnError(app.Eout, err, quiet)
 	}
 
+	// Render Source code outputs
 	if tangle {
-		err = mwDoc.Tangle(app.Eout)
+		err = doc.Tangle(app.Eout)
 		cli.ExitOnError(app.Eout, err, quiet)
 	}
 
