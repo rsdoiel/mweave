@@ -5,13 +5,14 @@
 
 ## Next
 
-+ [ ] build out test coverage
-+ [ ] Bump version number to v0.1.x for Go implementation
++ [ ] Build out test coverage
++ [ ] Integrate [shorthand](https://github.com/rsdoiel/shorthand) as mweave's macro system
+    + [ ] shorthand should be a cli option and execute before mweave.Parse() if selected
++ [ ] Bump version number to v0.1.1 for Go implementation
 
 
 ## Someday, Maybe
 
-+ [ ] Add [shorthand](https://github.com/rsdoiel/shorthand) to function as macro system
 + [ ] Rewrite mweave in mweave itself, i.e. mweave -tangle -i mwmeave.mweave would generate mweave.go, mweave_test.go, cmd/mweave/mweave.go
 + [ ] Exploring implementing a native Markdown processor in mweave 
     + [ ] Add support to render mweave render documentation and source as Jupyter Notebook
