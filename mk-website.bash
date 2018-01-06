@@ -24,27 +24,24 @@ TITLE=""
 if [[ "${1}" != "" ]]; then
 	TITLE="${1}"
 fi
+
+mkpage "nav=nav.md" "content=README.md" page.tmpl >index.html
+git add index.html
+
 mkpage "nav=nav.md" "content=markdown:$(cat LICENSE)" page.tmpl >license.html
 git add license.html
+
+mkpage "nav=nav.md" "content=INSTALL.md" page.tmpl >install.html
+git add install.html
+
+
 findfile -s ".md" . | while read P; do
-	DNAME=$(dirname "$P")
+	DNAME="$(dirname "$P")"
 	FNAME=$(basename "$P")
-	case "$FNAME" in
-	"INSTALL.md")
-		HTML_NAME="${DNAME}/install.html"
-		;;
-	"README.md")
-		if [ ! -f "${DNAME}/index.md" ]; then
-			HTML_NAME="${DNAME}/index.html"
-		else
-			HTML_NAME="${DNAME}/README.html"
-		fi
-		;;
-	*)
-		HTML_NAME=$(echo "$P" | sed -E 's/.md$/.html/g')
-		;;
-	esac
-	if [[ "${DNAME:0:4}" != "dist" && "${DNAME:0:4}" != "test" && "${FNAME}" != "nav.md" ]]; then
+    PREFIX="${DNAME:0:4}"
+
+	if [[ "${PREFIX}" != "dist" && "${PREFIX}" != "node" && "${PREFIX}" != "test" && "${FNAME}" != "nav.md" && "${FNAME}" != "README.md" ]]; then
+        HTML_NAME="${DNAME}/$(basename "$FNAME" ".md").html"
 		NAV=$(FindNavMD "$DNAME")
 		echo "Building $HTML_NAME from $DNAME/$FNAME and $NAV"
 		mkpage "title=text:${TITLE}" "nav=${NAV}" "content=${DNAME}/${FNAME}" page.tmpl >"${HTML_NAME}"

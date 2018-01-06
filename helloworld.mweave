@@ -4,9 +4,11 @@
 This is an example of "Hello World" implemented with JavaScript and _mweave.js_
 
 [helloworld.js](helloworld.js)
+<!--mweave:begin "helloworld.js" 0 -->
 ```JavaScript
     console.log("Hello World");
 ```
+<!--mweave:end -->
 
 Processing this with the command--
 
@@ -24,6 +26,7 @@ Should yield the script **helloworld.js** containing only
 We are just going to pop open the results and see if they are what we expect.
 
 [test_helloworld.js](test_helloworld.js)
+<!--mweave:begin "test_helloworld.js" 0 -->
 ```JavaScript
     var fs = require("fs");
     fs.readFile("helloworld.js", function (err, buf) {
@@ -44,4 +47,5 @@ We are just going to pop open the results and see if they are what we expect.
         }
     });
 ```
+<!--mweave:end -->
 

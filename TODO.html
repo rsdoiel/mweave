@@ -21,11 +21,11 @@
 <ul>
 <li>[x] cmd/mweave/mweave skeleton</li>
 <li>[x] Makefile and supporting Bash scripts</li>
-<li>[ ] Parse()</li>
-<li>[ ] Render AST to JSON</li>
-<li>[ ] Render AST to XML</li>
+<li>[x] Parse()</li>
+<li>[x] Render AST to JSON</li>
+<li>[x] Render AST to XML</li>
+<li>[x] Weave()</li>
 <li>[ ] Tangle()</li>
-<li>[ ] Weave()</li>
 </ul></li>
 <li>[ ] Bump version number to v0.1.x for Go implementation, leave NodeJS implementation at v0.0.x</li>
 <li>[ ] Figure out if I can depreciate the NodeJS implementation pointed to by npmjs.org.</li>
@@ -34,10 +34,12 @@
 <h2>Someday, Maybe</h2>
 
 <ul>
+<li>[ ] Rewrite mweave as itself, i.e. mweave -tangle -i mwmeave.mweave would generate mweave.go, mweave_test.go, cmd/mweave/mweave.go</li>
+<li>[ ] Add <a href="https://github.com/rsdoiel/shorthand">shorthand</a> as macro system</li>
 <li>[ ] Add support to render mweave render documentation and source as Jupyter Notebook</li>
 <li>[ ] Add support to render PDF documentation</li>
 <li>[ ] Add support to render ePub documentation</li>
-<li>[ ] Add a mweave native Markdown processor</li>
+<li>[ ] Add a native Markdown processor to mweave (so outputs could be source and HTML rather than source and Markdown)</li>
 <li>[ ] Rename project to somthing more accurately descriptive (e.g. <em>mweaver</em>, <em>mlit</em>, <em>mloom</em>)</li>
 </ul>
 

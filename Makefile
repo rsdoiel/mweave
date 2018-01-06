@@ -29,6 +29,7 @@ bin/mweave$(EXT): mweave.go cmd/mweave/mweave.go
 
 README.md: bin/mweave$(EXT) README.mweave
 	./bin/mweave -weave -i README.mweave -o README.md
+	git add README.md
 
 test:
 	go test
@@ -52,7 +53,7 @@ clean:
 generate_usage_pages: mweave
 	bash gen-usage-pages.bash
 
-website:
+website: generate_usage_pages
 	bash mk-website.bash
 
 publish: generate_usage_pages

@@ -36,20 +36,23 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"sort"
 	"strconv"
+	"strings"
 	"text/scanner"
 )
 
 const (
 	// Version of package
-	Version = `v0.1.0-dev`
+	Version = `v0.1.0`
 	DocType = `mweave`
 
 	// Constants used to identify type
 	PlainText = iota
 	EmptyBlock
-	DirectiveBegin
-	DirectiveEnd
+	SourceBegin
+	SourceEnd
 )
 
 type Document struct {
@@ -74,9 +77,9 @@ func (elem *Element) MarshalJSON() ([]byte, error) {
 	switch elem.Type {
 	case PlainText:
 		m["_type"] = "text/plain"
-	case DirectiveBegin:
+	case SourceBegin:
 		m["_type"] = "directive/begin"
-	case DirectiveEnd:
+	case SourceEnd:
 		m["_type"] = "directive/end"
 	case EmptyBlock:
 		m["_type"] = "text/empty"
@@ -130,7 +133,7 @@ func Parse(src []byte) (*Document, error) {
 		case bytes.HasPrefix(line, []byte("<!--mweave:begin")):
 			// Save our directive
 			elem := new(Element)
-			elem.Type = DirectiveBegin
+			elem.Type = SourceBegin
 			elem.LineNo = i
 			elem.rawValue = bytes.TrimSpace(line)
 			elem.Value = "mweave:begin"
@@ -142,7 +145,7 @@ func Parse(src []byte) (*Document, error) {
 		case bytes.HasPrefix(line, []byte("<!--mweave:end")):
 			// Save our directive
 			elem := new(Element)
-			elem.Type = DirectiveEnd
+			elem.Type = SourceEnd
 			elem.LineNo = i
 			elem.rawValue = bytes.TrimSpace(line)
 			elem.Value = "mweave:end"
@@ -169,7 +172,7 @@ func Parse(src []byte) (*Document, error) {
 }
 
 // Weave will transform the weave document into a plain text document.
-func (doc *Document) Weave(out) error {
+func (doc *Document) Weave(out io.Writer) error {
 	if len(doc.Elements) == 0 {
 		return fmt.Errorf("nothing to weave")
 	}
@@ -181,56 +184,114 @@ func (doc *Document) Weave(out) error {
 	return nil
 }
 
-type tangledParts map[string][]string
-
-type tangledDocs map[string]*tangledParts
-
-func assemble(m *tangledParts) []byte {
-	return []byte("assemble not implemented")
+func assemble(m map[string]string) []byte {
+	var (
+		keys      []string
+		buf       []byte
+		skip      bool
+		shiftLeft bool
+	)
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	//last := len(keys) - 1
+	for _, key := range keys {
+		if val, ok := m[key]; ok == true {
+			for _, s := range strings.Split(val, "\n") {
+				if shiftLeft == false && strings.HasPrefix(s, "```") {
+					shiftLeft = true
+					fmt.Println("DEBUG shiftLeft true")
+					skip = true
+				} else if shiftLeft == true && strings.HasPrefix(s, "```") {
+					shiftLeft = false
+					fmt.Println("DEBUG shiftLeft false")
+					skip = true
+				}
+				if shiftLeft {
+					s = strings.TrimPrefix(s, "    ")
+					fmt.Printf("DEBUG strings.TrimLeft(%q, \"    \")\n", s)
+				}
+				if skip {
+					skip = false
+				} else {
+					buf = append(buf, []byte(s+"\n")...)
+				}
+			}
+		}
+	}
+	return buf
 }
 
+func getAttribute(attrs []xml.Attr, key string) (string, bool) {
+	for _, attr := range attrs {
+		if attr.Name.Local == key {
+			return strings.Trim(attr.Value, "\""), true
+		}
+	}
+	return "", false
+}
+
+// Tangle processes a Document stuct and renders source code
+// identified with <!--mweave:begin --> directives.
 func (doc *Document) Tangle() error {
 	var (
 		fName string
-		index int
+		index string
+		ok    bool
+		tdocs map[string]map[string]string
 	)
 
 	// collect all the tangled docs
-	tdocs := new(tangledDocs)
+	tdocs = make(map[string]map[string]string)
+	fName = ""
+	index = ""
 
 	// collect the socs to rangle out
-	for i, elem := range doc.Elements {
+	for _, elem := range doc.Elements {
 		switch elem.Type {
-		case DirectiveBegin:
-			fName, ok = elem.Attrs["filename"]
+		case SourceBegin:
+			fName, ok = getAttribute(elem.Attributes, "filename")
 			if ok == false {
 				return fmt.Errorf("missing doc name for mweave:begin at line %d", elem.LineNo)
 			}
-			index, ok = elem.Attrs["index"]
+			index, ok = getAttribute(elem.Attributes, "index")
 			if ok == false {
 				return fmt.Errorf("missing doc index for mweave:begin at line %d", elem.LineNo)
 			}
-		case DirectiveEnd:
+			// NOTE: we need to left pad index with zero since we're
+			// going to need to sort the string eventually.
+			if i, err := strconv.Atoi(index); err == nil {
+				index = fmt.Sprintf("%010d", i)
+			} else {
+				return fmt.Errorf("was expecting an integer value for index, got %q", index)
+			}
+		case SourceEnd:
 			fName = ""
-			index = 0
+			index = ""
 		default:
 			if fName != "" {
-				if parts, ok := td[fName]; ok == true {
-					parts[index] = append(parts[index], elem.Value)
+				if parts, ok := tdocs[fName]; ok == true {
+					if src, ok := parts[index]; ok == true {
+						parts[index] = src + elem.Value
+					} else {
+						parts[index] = elem.Value
+					}
+					tdocs[fName] = parts
 				} else {
-					parts := new(tangledParts)
-					parts[index] = append(parts[index], elem.Value)
-					td[fName] = parts
+					parts := make(map[string]string)
+					parts[index] = elem.Value
+					tdocs[fName] = parts
 				}
 			}
 		}
 	}
 
-	if len(td) == 0 {
+	if len(tdocs) == 0 {
 		return fmt.Errorf("nothing to tangle")
 	}
 	// assemble the tangled docs
-	for fName, parts := range td {
+	for fName, parts := range tdocs {
 		err := ioutil.WriteFile(fName, assemble(parts), 0664)
 		if err != nil {
 			return fmt.Errorf("error writing %s, %s", fName, err)

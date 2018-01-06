@@ -59,6 +59,14 @@ generate source files from an mweave document
 generate documentation from an mweave document
 
     mweave -i documemt.mweave -weave
+
+display mweave parse results as XML
+
+	mweave -i document.mweave -xml
+
+display mweave parse results as JSON
+
+	mweave -i document.mweave -xml
 `
 
 	// Standard Options
@@ -174,13 +182,13 @@ func main() {
 
 	// Render Markdown outputs
 	if weave {
-		err = doc.Weave(app.Out, app.Eout)
+		err = doc.Weave(app.Out)
 		cli.ExitOnError(app.Eout, err, quiet)
 	}
 
 	// Render Source code outputs
 	if tangle {
-		err = doc.Tangle(app.Eout)
+		err = doc.Tangle()
 		cli.ExitOnError(app.Eout, err, quiet)
 	}
 

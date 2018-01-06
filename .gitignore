@@ -45,3 +45,7 @@ package-lock.json
 bin/
 dist/
 testout/
+example-1.md
+helloworld.md
+HelloWorld.md
+markdown-weave.md
