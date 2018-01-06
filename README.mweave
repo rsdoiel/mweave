@@ -40,20 +40,41 @@ _mweave_ is a Golang package and command line program. It provides both "tangle"
 "weave" functions that are expected in literate programming tools today. An _mweave_
 file is presumed to be a UTF-8 plain text file with an extension of ".mweave" or ".mw".
 Documentation is rendered to Markdown file(s) and source to the specified source code files.
-It is still one command but by default both documentation and source are generated.
+It is still one command but by picking the `-weave` or `-tangle` options you can generate
+both documentation (e.g. Markdown output) and source code file(s).
 At it's core _mweave_ is a pre-processor that looks for _mweave_ directives. Unlike the 2012
 version _mweave_ directives are embedded in HTML/XML style comments.
 
-<!--mweave:begin "HelloWorld.md" 0 -->
+As an example you can render a "helloworld" python script from [helloworld.mweave](demos/helloworld.mweave)
+Documentation would wind up as _helloworld.md_ from a _helloworld.mweave_ file. Below is an example
+of what _helloworld.mweave_ might look like.
+
+<!--mweave:begin "demos/helloworld.mweave" 0 -->
 ```
-    <!--mweave:begin "HelloWorld.md" 0 -->
     # Hello World!
 
     This is an example of an embedded document to be extracted by 
     [mweave](https://github.com/rsdoiel/mweave).
+    <!--mweave:begin "helloworld.py" 0 -->
+    ```python
+        #!/usr/bin/env python3
+        print("Hello World!")
+    ```
     <!--mweave:end -->
 ```
 <!--mweave:end -->
+
+Here are the commands to render _helloworld.md_ and _helloworld.py_ from our _helloworld.mweave_ source.
+
+```shell
+    mweave -weave -i helloworld.mweave -o helloworld.md
+    mweave -tangle -i hellowolrd.meave
+```
+
+Notice that tangle ignores the output file name. That is beceause the source files are set in the 
+mweave begin directive.
+
+### How it works
 
 _mweave_ reads in the entire source document splitting it up based on the directives it encounters.
 There are two directives - *mweave:begin* and *mweave:end*.  *mweave:begin* takes two required 
