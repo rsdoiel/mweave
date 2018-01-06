@@ -8,4 +8,4 @@ use the command line program is available
 
 ## Original experiment
 
-See the original [README.md](../README-v0.0.2.html).
+See the original [README.md](README-v0.0.2.html).
