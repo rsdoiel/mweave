@@ -169,7 +169,10 @@ func Parse(src []byte) (*Document, error) {
 }
 
 // Weave will transform the weave document into a plain text document.
-func (doc *Document) Weave(out, eout io.Writer) error {
+func (doc *Document) Weave(out) error {
+	if len(doc.Elements) == 0 {
+		return fmt.Errorf("nothing to weave")
+	}
 	for _, elem := range doc.Elements {
 		if elem.Type == PlainText || elem.Type == EmptyBlock {
 			fmt.Fprint(out, elem.Value)
@@ -178,6 +181,60 @@ func (doc *Document) Weave(out, eout io.Writer) error {
 	return nil
 }
 
-func (doc *Document) Tangle(eout io.Writer) error {
-	return fmt.Errorf("Tangle() not implemented")
+type tangledParts map[string][]string
+
+type tangledDocs map[string]*tangledParts
+
+func assemble(m *tangledParts) []byte {
+	return []byte("assemble not implemented")
+}
+
+func (doc *Document) Tangle() error {
+	var (
+		fName string
+		index int
+	)
+
+	// collect all the tangled docs
+	tdocs := new(tangledDocs)
+
+	// collect the socs to rangle out
+	for i, elem := range doc.Elements {
+		switch elem.Type {
+		case DirectiveBegin:
+			fName, ok = elem.Attrs["filename"]
+			if ok == false {
+				return fmt.Errorf("missing doc name for mweave:begin at line %d", elem.LineNo)
+			}
+			index, ok = elem.Attrs["index"]
+			if ok == false {
+				return fmt.Errorf("missing doc index for mweave:begin at line %d", elem.LineNo)
+			}
+		case DirectiveEnd:
+			fName = ""
+			index = 0
+		default:
+			if fName != "" {
+				if parts, ok := td[fName]; ok == true {
+					parts[index] = append(parts[index], elem.Value)
+				} else {
+					parts := new(tangledParts)
+					parts[index] = append(parts[index], elem.Value)
+					td[fName] = parts
+				}
+			}
+		}
+	}
+
+	if len(td) == 0 {
+		return fmt.Errorf("nothing to tangle")
+	}
+	// assemble the tangled docs
+	for fName, parts := range td {
+		err := ioutil.WriteFile(fName, assemble(parts), 0664)
+		if err != nil {
+			return fmt.Errorf("error writing %s, %s", fName, err)
+		}
+	}
+	return nil
 }
