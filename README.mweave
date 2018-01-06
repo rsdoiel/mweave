@@ -19,14 +19,14 @@ preceeded by a link were scraped and written to a file indicated by the targette
 I did not use the concepts of "tangle" and "weave" individually and I didn't
 support the arbitrary ordering of code blocks when generating files.
 
-My bootstrap was written in a Bash script that would process the README.md file
-using _vi_, _sed_, to generate a *mw-bootstrap.js* and then _npm_ to build it. 
-In the end my initial experiment failed because I failed to use it. 
+My bootstrap was written in Bash, it would process the README.md file
+using _vi_, _sed_, to generate a *mw-bootstrap.js* and then finally _npm_ to build _mw.js_. 
+In the end my initial experiment failed because I failed to use _mw.js_.  It wasn't compelling.
+The version number at npmjs.org shows 0.0.2.  
 
-I stopped the experiment sometime in 2013. It was not a success as I did not find
-it compelling enough to use in practice. It was a fun thing to write and think about.
-Eventually I moved on from NodeJS/JavaScript to other development languages and projects.
-Of course cool things like [Jupyter Notebooks](https://jupyter.org/) happened as well.
+While it was a fun thing to write and think about I moved onto other projects and 
+languages after 2013.  Of course cool things like [Jupyter Notebooks](https://jupyter.org/) 
+happened while this experiment languished.
 
 ### mweave in January, 2018
 
