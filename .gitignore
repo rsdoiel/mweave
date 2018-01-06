@@ -1,24 +1,6 @@
 #
-# NodeJS ignores
+# Golang ignores
 #
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-
-pids
-logs
-results
-
-npm-debug.log
-
-# Project Ignores
-node_modules/*
-package-lock.json
 
 # Binaries for programs and plugins
 *.exe
@@ -35,17 +17,11 @@ package-lock.json
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
-#
-# Golang ignores
-#
-
 # Project ignores
 *~
 *.swp
 bin/
 dist/
 testout/
-example-1.md
-helloworld.md
-HelloWorld.md
-markdown-weave.md
+demos/*.js
+demos/*.md
