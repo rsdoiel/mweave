@@ -40,7 +40,7 @@ findfile -s ".md" . | while read P; do
 	FNAME=$(basename "$P")
     PREFIX="${DNAME:0:4}"
 
-	if [[ "${PREFIX}" != "dist" && "${PREFIX}" != "node" && "${PREFIX}" != "test" && "${FNAME}" != "nav.md" && "${FNAME}" != "README.md" ]]; then
+	if [[ "${PREFIX}" != "dist" && "${PREFIX}" != "node" && "${PREFIX}" != "test" && "${FNAME}" != "nav.md" && "${FNAME}" != "README.md" && "${FNAME}" != "INSTALL.md"  ]]; then
         HTML_NAME="${DNAME}/$(basename "$FNAME" ".md").html"
 		NAV=$(FindNavMD "$DNAME")
 		echo "Building $HTML_NAME from $DNAME/$FNAME and $NAV"
