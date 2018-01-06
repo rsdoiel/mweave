@@ -1,5 +1,7 @@
 #!/bin/bash
 
+TITLE="mweave - a light weight literate programming tool"
+
 function cleanUpHTML() {
 	findfile -s ".html" . | while read -r P; do
 		rm "$P"
@@ -26,15 +28,15 @@ if [[ "${1}" != "" ]]; then
 fi
 
 echo "Building index.html from README.md and nav.md"
-mkpage "nav=nav.md" "content=README.md" page.tmpl >index.html
+mkpage "title=text:${TITLE}" "nav=nav.md" "content=README.md" page.tmpl >index.html
 git add index.html
 
 echo "Building license.html from LICENSE and nav.md"
-mkpage "nav=nav.md" "content=markdown:$(cat LICENSE)" page.tmpl >license.html
+mkpage "title=text:${TITLE}" "nav=nav.md" "content=markdown:$(cat LICENSE)" page.tmpl >license.html
 git add license.html
 
 echo "Building install.html from INSTALL.md and nav.md"
-mkpage "nav=nav.md" "content=INSTALL.md" page.tmpl >install.html
+mkpage "title=text:${TITLE}" "nav=nav.md" "content=INSTALL.md" page.tmpl >install.html
 git add install.html
 
 findfile -s ".md" . | while read -r P; do
