@@ -5,6 +5,7 @@
 
 ## Next
 
++ [ ] build out test coverage
 + [ ] Bump version number to v0.1.x for Go implementation
 
 
