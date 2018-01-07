@@ -1,4 +1,4 @@
-<!--mweave:begin "example-1.md" 0 -->
+<!--mweave:source "example-1.md" 0 -->
 
 # Example 1, write code as a series of blocks
 
@@ -7,7 +7,7 @@ to write prose then generate code. _mweave_ uses Markdown's
 code blocks for that.
 
 [Add our first block](example-1.js)
-<!--mweave:begin "example-1.js" 0 -->
+<!--mweave:source "example-1.js" 0 -->
 ```JavaScript
     /**
      * example-1.js
@@ -19,7 +19,7 @@ code blocks for that.
 In this block I just setup a command header and a _jslint_ directive.
 
 [Now lets get some code going](example-1.js)
-<!--mweave:begin "example-1.js" 1 -->
+<!--mweave:source "example-1.js" 1 -->
 ```JavaScript
     console.log("Caculating 1 + 1");
     var accumulator = 0;
@@ -30,7 +30,7 @@ In this block I just setup a command header and a _jslint_ directive.
 Now that we done a caculation let us send that to the console.
 
 [Write the results](example-1.js)
-<!--mweave:begin "example-1.js" 2 -->
+<!--mweave:source "example-1.js" 2 -->
 ```JavaScript
     console.log("And the answer is", accumulator);
 ```
@@ -39,7 +39,7 @@ Now that we done a caculation let us send that to the console.
 Finally let us tell the viewer we are done.
 
 [Last bits of program](example-1.js)
-<!--mweave:begin "example-1.js" 3 -->
+<!--mweave:source "example-1.js" 3 -->
 ```JavaScript
     console.log("All done!");
     process.exit(0);

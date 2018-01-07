@@ -58,13 +58,13 @@ would give you the final [helloworld](demos/helloworld.html) page.
 
 Here is the example mweave file--
 
-<!--mweave:begin "demos/helloworld.mweave" 0 -->
+<!--mweave:source "demos/helloworld.mweave" 0 -->
 ```
     # Hello World!
 
     This is an example of an embedded document to be extracted by 
     [mweave](https://github.com/rsdoiel/mweave).
-    <!--mweave:begin "helloworld.py" 0 -->
+    <!--mweave:source "helloworld.py" 0 -->
     ```python
         #!/usr/bin/env python3
         print("Hello World!")
@@ -88,20 +88,22 @@ mweave begin directive.
 ### How it works
 
 _mweave_ reads in the entire source document splitting it up based on the directives it encounters.
-There are two directives - *mweave:begin* and *mweave:end*.  *mweave:begin* takes two required 
-parameters, the filename (string) and an order value (an integer). The ordering value is used by
-tangle to order blocks of texts associated with the filename. *mweave:end* takes no parameter.
-Currently I have no other directives planned. I am considering integrating 
-[shorthand](https://github.com/rsdoiel/shorthand) as the macro system sometime in the future.
-The _mweave_ directives are expected to be the first non-space element on the line. 
-They take up a whole line. 
+There are three directives - *mweave:source*, *mweave:macro* and *mweave:end*.  *mweave:source* 
+takes two required parameters, the filename (string) and an order value (an integer). The ordering 
+value is used by tangle to order blocks of texts associated with the filename. *mweave:macro* 
+takes two parameters one is a label string and the other is a macro (shorthand) op. The last is 
+*mweave:end* which takes no parameter.  Currently I have no other directives planned. I am 
+considering integrating [shorthand](https://github.com/rsdoiel/shorthand) as the macro system 
+sometime in the future.  The _mweave_ directives are expected to be the first non-space element 
+on the line.  They take up a whole line. 
 
 This 2nd _mweave_ experiment is still rediculiously simple like 2012. v0.1.0 was I implemented 
-in less than a day so I could experiment again with literate programming.  I am trying to sort out how 
+in less than a day so I could experiment again with literate programming. v0.1.1, integrating
+a macro system was another day (though the macro engine already existed). I am trying to sort out how 
 simple a tool I can write and still support literate programming. My hypothis is that if the 
 tool is simple enough I might actually use it and find it more useful and interesting to maintain.
 
-### But wait there is more...
+### The macro system in v0.1.1
 
 _mweave_ (v0.1.1) now has en experimental macro system. The macro system is 
 [shorthand](https://rsdoiel.github.io/shorthand). Shorthand provides additional

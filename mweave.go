@@ -20,7 +20,6 @@
 package mweave
 
 import (
-	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
@@ -30,6 +29,9 @@ import (
 	"strconv"
 	"strings"
 	"text/scanner"
+
+	// My packages
+	"github.com/rsdoiel/shorthand"
 )
 
 const (
@@ -40,15 +42,17 @@ const (
 	// Constants used to identify type
 	PlainText = iota
 	EmptyBlock
-	SourceBegin
-	SourceEnd
+	Source
+	Macro
+	End
 )
 
 type Document struct {
-	XMLName  xml.Name   `json:"-"`
-	DocType  string     `xml:"type,attr,omitempty" json:"doc_type,omitempty"`
-	Version  string     `xml:"version,attr,omitempty" json:"version,omitempty"`
-	Elements []*Element `xml:"elements>element,omitempty" json:"elements,omitempty"`
+	XMLName  xml.Name                  `json:"-"`
+	DocType  string                    `xml:"type,attr,omitempty" json:"doc_type,omitempty"`
+	Version  string                    `xml:"version,attr,omitempty" json:"version,omitempty"`
+	Elements []*Element                `xml:"elements>element,omitempty" json:"elements,omitempty"`
+	Macro    *shorthand.VirtualMachine `xml:"-" json:"-"`
 }
 
 type Element struct {
@@ -57,7 +61,8 @@ type Element struct {
 	LineNo     int        `xml:"line_no,attr,omitempty" json:"line_no,omitempty"`
 	Attributes []xml.Attr `xml:",any,attr" json:"attr,omitempty"`
 	Value      string     `xml:",chardata" json:"value,omitempty"`
-	rawValue   []byte
+	Err        error      `xml:"error,omitempty" json:"error,omitempty"`
+	rawValue   string
 }
 
 func (elem *Element) MarshalJSON() ([]byte, error) {
@@ -66,12 +71,14 @@ func (elem *Element) MarshalJSON() ([]byte, error) {
 	switch elem.Type {
 	case PlainText:
 		m["_type"] = "text/plain"
-	case SourceBegin:
-		m["_type"] = "directive/begin"
-	case SourceEnd:
+	case Source:
+		m["_type"] = "directive/source"
+	case End:
 		m["_type"] = "directive/end"
 	case EmptyBlock:
 		m["_type"] = "text/empty"
+	case Macro:
+		m["_type"] = "directive/macro"
 	default:
 		m["_type"] = "Unknown"
 	}
@@ -85,16 +92,25 @@ func (elem *Element) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m)
 }
 
-func parseAttributes(src []byte, attributes []string) ([]xml.Attr, error) {
+func (elem *Element) GetAttribute(s string) string {
+	for _, attr := range elem.Attributes {
+		if attr.Name.Local == s {
+			return attr.Value
+		}
+	}
+	return ""
+}
+
+func parseAttributes(src string, attributes []string) ([]xml.Attr, error) {
 	var (
 		attrs []xml.Attr
 		s     scanner.Scanner
 	)
-	// Trim off <!--mweave:begin and -->
-	src = bytes.TrimPrefix(src, []byte("<!--mweave:begin "))
-	src = bytes.TrimSuffix(src, []byte(" -->"))
+	// Trim off <!--mweave:source and -->
+	src = strings.TrimPrefix(src, "<!--mweave:source ")
+	src = strings.TrimSuffix(src, " -->")
 
-	s.Init(bytes.NewReader(src))
+	s.Init(strings.NewReader(src))
 	i := 0
 	for tok := s.Scan(); tok != scanner.EOF && i < len(attributes); tok = s.Scan() {
 		if i < len(attributes) {
@@ -110,43 +126,96 @@ func parseAttributes(src []byte, attributes []string) ([]xml.Attr, error) {
 	return attrs, nil
 }
 
+func moreLines(s []string) bool {
+	if len(s) > 0 {
+		return true
+	}
+	return false
+}
+
+func nextLine(s []string, i int) (string, []string, int) {
+	if len(s) > 0 {
+		i++
+		return s[0], s[1:], i
+	}
+	return "", []string{}, i
+}
+
 func Parse(src []byte) (*Document, error) {
-	var err error
+	var (
+		err  error
+		line string
+		i    int
+	)
 	doc := new(Document)
 	doc.DocType = "mweave"
 	doc.Version = Version
+	doc.Macro = shorthand.New()
+
 	//NOTE: This is a naive implementation based on analysing individual lines.
-	lines := bytes.Split(src, []byte("\n"))
-	for i, line := range lines {
+	lines := strings.Split(string(src), "\n")
+	for moreLines(lines) {
+		line, lines, i = nextLine(lines, i)
 		switch {
-		case bytes.HasPrefix(line, []byte("<!--mweave:begin")):
+		case strings.HasPrefix(line, "<!--mweave:source"):
 			// Save our directive
 			elem := new(Element)
-			elem.Type = SourceBegin
+			elem.Type = Source
 			elem.LineNo = i
-			elem.rawValue = bytes.TrimSpace(line)
-			elem.Value = "mweave:begin"
+			elem.rawValue = strings.TrimSpace(line)
+			elem.Value = "mweave:source"
 			elem.Attributes, err = parseAttributes(elem.rawValue, []string{"filename", "index"})
 			if err != nil {
 				return doc, err
 			}
+			// Read ahead as until we find the <!--mweave:end
+			sourceBody := []string{}
+			for moreLines(lines) {
+				line, lines, i = nextLine(lines, i)
+				// Bail if with error if we hit the end of file our lines
+				if moreLines(lines) == false {
+					return doc, fmt.Errorf("Source starting at %d missing <!--mweave:end -->", elem.LineNo)
+				}
+				if strings.HasPrefix(line, "<!--mweave:end") == true {
+					// Assemble our Macro and add it to our Macro VM
+					break
+				}
+				sourceBody = append(sourceBody, line)
+			}
+			elem.Value = strings.Join(sourceBody, "\n")
 			doc.Elements = append(doc.Elements, elem)
-		case bytes.HasPrefix(line, []byte("<!--mweave:end")):
-			// Save our directive
+		case strings.HasPrefix(line, "<!--mewave:macro"):
+			// Setup to add our macro's definition
 			elem := new(Element)
-			elem.Type = SourceEnd
+			elem.Type = Macro
 			elem.LineNo = i
-			elem.rawValue = bytes.TrimSpace(line)
-			elem.Value = "mweave:end"
-			elem.Attributes, err = parseAttributes(elem.rawValue, []string{})
-			doc.Elements = append(doc.Elements, elem)
+			elem.rawValue = strings.TrimSpace(line)
+			elem.Attributes, err = parseAttributes(elem.rawValue, []string{"label", "op"})
 			if err != nil {
 				return doc, err
 			}
+			// Read ahead as until we find the <!--mweave:end
+			macroBody := []string{}
+			for moreLines(lines) {
+				line, lines, i = nextLine(lines, i)
+				// Bail if with error if we hit the end of file our lines
+				if moreLines(lines) == false {
+					return doc, fmt.Errorf("Macro starting at %d missing <!--mweave:end -->", elem.LineNo)
+				}
+				if strings.HasPrefix(line, "<!--mweave:end") == true {
+					// Assemble our Macro and add it to our Macro VM
+					break
+				}
+				macroBody = append(macroBody, line)
+			}
+			label := elem.GetAttribute("label")
+			op := elem.GetAttribute("op")
+			elem.Value, elem.Err = doc.Macro.Eval(label+" :"+op+": "+strings.Join(macroBody, "\n"), elem.LineNo)
+			doc.Elements = append(doc.Elements, elem)
 		default:
 			//Create a the next PlainText Element
 			elem := new(Element)
-			if len(bytes.TrimSpace(line)) == 0 {
+			if len(strings.TrimSpace(line)) == 0 {
 				elem.Type = EmptyBlock
 			} else {
 				elem.Type = PlainText
@@ -219,7 +288,7 @@ func getAttribute(attrs []xml.Attr, key string) (string, bool) {
 }
 
 // Tangle processes a Document stuct and renders source code
-// identified with <!--mweave:begin --> directives.
+// identified with <!--mweave:source --> directives.
 func (doc *Document) Tangle() error {
 	var (
 		fName string
@@ -236,14 +305,14 @@ func (doc *Document) Tangle() error {
 	// collect the socs to rangle out
 	for _, elem := range doc.Elements {
 		switch elem.Type {
-		case SourceBegin:
+		case Source:
 			fName, ok = getAttribute(elem.Attributes, "filename")
 			if ok == false {
-				return fmt.Errorf("missing doc name for mweave:begin at line %d", elem.LineNo)
+				return fmt.Errorf("missing doc name for mweave:source at line %d", elem.LineNo)
 			}
 			index, ok = getAttribute(elem.Attributes, "index")
 			if ok == false {
-				return fmt.Errorf("missing doc index for mweave:begin at line %d", elem.LineNo)
+				return fmt.Errorf("missing doc index for mweave:source at line %d", elem.LineNo)
 			}
 			// NOTE: we need to left pad index with zero since we're
 			// going to need to sort the string eventually.
@@ -252,7 +321,7 @@ func (doc *Document) Tangle() error {
 			} else {
 				return fmt.Errorf("was expecting an integer value for index, got %q", index)
 			}
-		case SourceEnd:
+		case End:
 			fName = ""
 			index = ""
 		default:
