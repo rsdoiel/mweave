@@ -34,7 +34,7 @@ import (
 
 const (
 	// Version of package
-	Version = `v0.1.1-dev`
+	Version = `v0.1.1`
 	DocType = `mweave`
 
 	// Constants used to identify type
