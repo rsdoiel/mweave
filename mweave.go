@@ -226,9 +226,7 @@ func (doc *Document) Weave(out io.Writer) error {
 		return fmt.Errorf("nothing to weave")
 	}
 	for _, elem := range doc.Elements {
-		if elem.Type == PlainText || elem.Type == EmptyBlock {
-			fmt.Fprint(out, elem.Value)
-		}
+		fmt.Fprintf(out, "%s\n", elem.Value)
 	}
 	return nil
 }
@@ -312,10 +310,6 @@ func (doc *Document) Tangle() error {
 			} else {
 				return fmt.Errorf("was expecting an integer value for index, got %q", index)
 			}
-		case End:
-			fName = ""
-			index = ""
-		default:
 			if fName != "" {
 				if parts, ok := tdocs[fName]; ok == true {
 					if src, ok := parts[index]; ok == true {
