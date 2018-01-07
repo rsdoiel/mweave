@@ -62,7 +62,6 @@ type Element struct {
 	Attributes []xml.Attr `xml:",any,attr" json:"attr,omitempty"`
 	Value      string     `xml:",chardata" json:"value,omitempty"`
 	Err        error      `xml:"error,omitempty" json:"error,omitempty"`
-	rawValue   string
 }
 
 func (elem *Element) MarshalJSON() ([]byte, error) {
@@ -162,9 +161,7 @@ func Parse(src []byte) (*Document, error) {
 			elem := new(Element)
 			elem.Type = Source
 			elem.LineNo = i
-			elem.rawValue = strings.TrimSpace(line)
-			elem.Value = "mweave:source"
-			elem.Attributes, err = parseAttributes(elem.rawValue, []string{"filename", "index"})
+			elem.Attributes, err = parseAttributes(line, []string{"filename", "index"})
 			if err != nil {
 				return doc, err
 			}
@@ -189,8 +186,7 @@ func Parse(src []byte) (*Document, error) {
 			elem := new(Element)
 			elem.Type = Macro
 			elem.LineNo = i
-			elem.rawValue = strings.TrimSpace(line)
-			elem.Attributes, err = parseAttributes(elem.rawValue, []string{"label", "op"})
+			elem.Attributes, err = parseAttributes(line, []string{"label", "op"})
 			if err != nil {
 				return doc, err
 			}
@@ -215,14 +211,9 @@ func Parse(src []byte) (*Document, error) {
 		default:
 			//Create a the next PlainText Element
 			elem := new(Element)
-			if len(strings.TrimSpace(line)) == 0 {
-				elem.Type = EmptyBlock
-			} else {
-				elem.Type = PlainText
-			}
+			elem.Type = PlainText
 			elem.LineNo = i
-			elem.rawValue = line
-			elem.Value = fmt.Sprintf("%s\n", elem.rawValue)
+			elem.Value = line
 			doc.Elements = append(doc.Elements, elem)
 		}
 	}

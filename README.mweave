@@ -118,7 +118,7 @@ development.
 + Golang version 1.9.2 or better
 
 ## Installation
-#
+
 _mweave_ is "go get"-able.
 
 ```shell
