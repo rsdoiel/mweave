@@ -23,6 +23,32 @@ import (
 	"testing"
 )
 
-func TestPlaceholder(t *testing.T) {
-	t.Errorf("mweave.go has not be implemented.")
+func TestAssemble(t *testing.T) {
+	text := `
+
+# Hello World!
+
+<!--mweave:macro set <<NAME>> "George!" -->
+<!--mweave:macro bash <<TIME>> -->
+echo -n $(date "+%I:%M")
+<!--mweave:end -->
+
+This is an example of an embedded document to be extracted by 
+[mweave](https://github.com/rsdoiel/mweave).
+
+<!--mweave:source "testout/helloworld.py" 0 -->
+` + "```python" + `
+    #!/usr/bin/env python3
+    print("Hello World!")
+	print("Hello, <<NAME>>")
+	print("It is <<TIME>>")
+` + "```" + `
+<!--mweave:end -->
+`
+
+	doc, err := Parse(text)
+	if err != nil {
+		t.Errorf("Parse failed, %s", err)
+	}
+
 }

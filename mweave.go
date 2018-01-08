@@ -239,23 +239,6 @@ func (doc *Document) Weave(out io.Writer) error {
 	return nil
 }
 
-// applyMacros creates a shorthand VM and evaluates the
-// byte array passed in. This adds a Macro ability to mweave
-// hopefully making it more literate in the process :-)
-func applyMacros(lines []string, macros *shorthand.VirtualMachine) ([]byte, error) {
-	macros.SetPrompt("")
-	output := []string{}
-
-	for i, line := range lines {
-		if s, err := macros.Eval(line, i); err == nil {
-			output = append(output, s)
-		} else {
-			return nil, err
-		}
-	}
-	return []byte(strings.Join(output, "\n")), nil
-}
-
 func assemble(m map[string]string, macros *shorthand.VirtualMachine) ([]byte, error) {
 	var (
 		keys      []string
@@ -288,7 +271,7 @@ func assemble(m map[string]string, macros *shorthand.VirtualMachine) ([]byte, er
 			}
 		}
 	}
-	return applyMacros(buf, macros)
+	return macros.Apply(buf, false)
 }
 
 func getAttribute(attrs []xml.Attr, key string) (string, bool) {

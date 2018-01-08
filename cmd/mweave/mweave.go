@@ -71,11 +71,11 @@ display mweave parse results as JSON
 	outputFName          string
 
 	// Application Options
-	weave       bool
-	tangle      bool
-	astJSON     bool
-	astXML      bool
-	applyMacros bool
+	weave           bool
+	tangle          bool
+	docAsJSON       bool
+	docAsXML        bool
+	shorthandMacros bool
 )
 
 func main() {
@@ -102,9 +102,9 @@ func main() {
 	// Application Options
 	app.BoolVar(&weave, "w,weave", false, "generate documentations files (e.g. Markdown output)")
 	app.BoolVar(&tangle, "t,tangle", false, "generate source code files (e.g. program code)")
-	app.BoolVar(&astJSON, "ast,json", false, "write out the AST of parsing the mweave file as JSON")
-	app.BoolVar(&astXML, "xml", false, "write out the AST of parsing the mweave file as JSON")
-	app.BoolVar(&applyMacros, "macros", true, "apply macros before further processing, defaults to true")
+	app.BoolVar(&docAsJSON, "json", false, "write mweave doc as JSON")
+	app.BoolVar(&docAsXML, "xml", false, "write mweave doc as XML")
+	app.BoolVar(&shorthandMacros, "macros", false, "preprocess shorthand macros")
 
 	// Process environment and options
 	app.Parse()
@@ -156,8 +156,8 @@ func main() {
 	src, err := ioutil.ReadAll(app.In)
 	cli.ExitOnError(app.Eout, err, quiet)
 
-	// If apply *before* parsing with mweave.Parse()
-	if applyMacros {
+	// Pre-process shorthand Macros
+	if shorthandMacros {
 		macro := shorthand.New()
 		src, err = macro.Apply(src, false)
 		cli.ExitOnError(app.Eout, err, quiet)
@@ -168,31 +168,28 @@ func main() {
 	cli.ExitOnError(app.Eout, err, quiet)
 
 	switch {
-	case astJSON:
+	case docAsJSON:
 		src, err = json.MarshalIndent(doc, "", "    ")
 		cli.ExitOnError(app.Eout, err, quiet)
 		fmt.Fprintf(app.Out, "%s", src)
-	case astXML:
+		if newLine {
+			fmt.Fprintln(app.Out, "")
+		}
+	case docAsXML:
 		src, err = xml.MarshalIndent(doc, "", "   ")
 		cli.ExitOnError(app.Eout, err, quiet)
 		fmt.Fprintf(app.Out, "%s", src)
-	case weave == false && tangle == false:
-		fmt.Fprintf(app.Out, "OK")
-	}
-
-	// Render Markdown outputs
-	if weave {
+		if newLine {
+			fmt.Fprintln(app.Out, "")
+		}
+	case weave:
+		// Render Markdown outputs
 		err = doc.Weave(app.Out)
 		cli.ExitOnError(app.Eout, err, quiet)
-	}
-
-	// Render Source code outputs
-	if tangle {
+	case tangle:
 		err = doc.Tangle()
 		cli.ExitOnError(app.Eout, err, quiet)
-	}
-
-	if newLine {
-		fmt.Fprintln(app.Out, "")
+	default:
+		app.Usage(app.Out)
 	}
 }
