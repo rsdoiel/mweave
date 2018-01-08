@@ -3,6 +3,8 @@
 
 ## Bugs
 
++ [ ] I can build up blocks with Macros but mweave:source should assemble the source AND expand macros...
+
 ## Next
 
 + [ ] Build out test coverage

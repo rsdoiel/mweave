@@ -1,0 +1,117 @@
+
+# How to write "Word Count" in mweave
+
+First I need to think about what "Word Count" does.
+
+```
+    <<read in the file>>
+    <<for each line total the number of words>>
+    <<display total>>
+```
+
+
+The second step can be broken down further to 
+
+```
+    <<count the words in the line>>
+    <<add the number of words in the line to the total>>
+```
+
+
+So how do we code this? Let's start by accumulating our word count from
+the number of words in a line...
+
+```go
+<!--mweave:macro set "<<add the number of words in the line to the total>>" -->
+    total = total + wordsInLine
+<!--mweave:end -->
+```
+
+
+But wait, we need someplace to hold the total...
+
+``go
+<!--mweave:macro set "<<a place to hold the total>>" -->
+    var total int
+<!--mweave:end -->
+```
+
+How to we get the number of words in a line?
+
+```go
+<!--mweave:macro set "<<count the words in the line>>" -->
+    words := strings.Split(line, " ")
+    wordsInLine := len(words)
+<!--mweave:end -->
+```
+
+But how do we get the lines from a file...
+
+<!--mweave:macro set "<<for each line total the number of words>>" -->
+    for _, line := strings.Split(string(src), "\n") {
+        <<count the words in the line>>
+        <<add the number of words in the line to the total>>
+    }
+<!--mweave:end -->
+
+
+But how do we read in the lines of the file as `source`?
+
+```go
+<!--mweave:macro set "<<read in file>>" -->
+    src, err := ioutil.ReadAll(os.Stdin)
+    if err != nil {
+        fmt.Fprintf(os.Stdout, "error: %s\n", err)
+        os.Exit(0)
+    }
+<!--mweave:end -->
+```
+
+
+If we've read in the file, for each line counted the number of words and totaled
+them we still need to display the results. How?
+
+```go
+<!--mweave:macro set "<<display total>>" -->
+    fmt.Fprintf(os.Stdout, "Total: %d\n", total)
+<!--mweave:end -->
+```
+
+
+How do we put this all together?
+
+<!--mweave:macro set "<<code setup>>" -->
+package main
+
+import (
+    "fmt"
+    "io/ioutil"
+    "os"
+)
+<!--mweave:end -->
+
+
+Remember have to include our global total in 
+
+<!--mweave:macro set <<code preface>> -->
+```go
+    <<code setup>>
+    <<a place to hold the total>>
+```
+<!--mweave:end -->
+
+
+Now we probably have enought to scopre out the actual program...
+
+<!--mweave:source "wordcount.go" 0 -->
+```go
+    <<code preface>>
+    
+    func main () {
+        <<read in file>>
+        <<for each line total the number of words>>
+        <<display total>>
+    }
+```
+<!--mweave:end -->
+
