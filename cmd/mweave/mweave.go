@@ -28,6 +28,7 @@ import (
 
 	// My packages
 	"github.com/rsdoiel/mweave"
+	"github.com/rsdoiel/shorthand"
 
 	// Caltech Library packages
 	"github.com/caltechlibrary/cli"
@@ -157,7 +158,8 @@ func main() {
 
 	// If apply *before* parsing with mweave.Parse()
 	if applyMacros {
-		src, err = mweave.ApplyMacros(src)
+		macro := shorthand.New()
+		src, err = macro.Apply(src, false)
 		cli.ExitOnError(app.Eout, err, quiet)
 	}
 

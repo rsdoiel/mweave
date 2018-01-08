@@ -41,7 +41,6 @@ const (
 
 	// Constants used to identify type
 	PlainText = iota
-	EmptyBlock
 	Source
 	Macro
 	End
@@ -61,6 +60,8 @@ type Element struct {
 	LineNo     int        `xml:"line_no,attr,omitempty" json:"line_no,omitempty"`
 	Attributes []xml.Attr `xml:",any,attr" json:"attr,omitempty"`
 	Value      string     `xml:",chardata" json:"value,omitempty"`
+	Label      string     `xml:"label,attr,omitempty" json:"label,omitempty"`
+	Op         string     `xml:"op,attr,omitempty" json:"op,omitempty"`
 	Err        error      `xml:"error,omitempty" json:"error,omitempty"`
 }
 
@@ -74,8 +75,6 @@ func (elem *Element) MarshalJSON() ([]byte, error) {
 		m["_type"] = "directive/source"
 	case End:
 		m["_type"] = "directive/end"
-	case EmptyBlock:
-		m["_type"] = "text/empty"
 	case Macro:
 		m["_type"] = "directive/macro"
 	default:
@@ -105,8 +104,9 @@ func parseAttributes(src string, attributes []string) ([]xml.Attr, error) {
 		attrs []xml.Attr
 		s     scanner.Scanner
 	)
-	// Trim off <!--mweave:source and -->
+	// Trim off <!--mweave:source, <!--mweave:macro and -->
 	src = strings.TrimPrefix(src, "<!--mweave:source ")
+	src = strings.TrimPrefix(src, "<!--mweave:macro ")
 	src = strings.TrimSuffix(src, " -->")
 
 	s.Init(strings.NewReader(src))
@@ -166,7 +166,7 @@ func Parse(src []byte) (*Document, error) {
 				return doc, err
 			}
 			// Read ahead as until we find the <!--mweave:end
-			sourceBody := []string{}
+			body := []string{}
 			for moreLines(lines) {
 				line, lines, i = nextLine(lines, i)
 				// Bail if with error if we hit the end of file our lines
@@ -177,21 +177,21 @@ func Parse(src []byte) (*Document, error) {
 					// Assemble our Macro and add it to our Macro VM
 					break
 				}
-				sourceBody = append(sourceBody, line)
+				body = append(body, line)
 			}
-			elem.Value = strings.Join(sourceBody, "\n")
+			elem.Value = strings.Join(body, "\n")
 			doc.Elements = append(doc.Elements, elem)
-		case strings.HasPrefix(line, "<!--mewave:macro"):
+		case strings.HasPrefix(line, "<!--mweave:macro"):
 			// Setup to add our macro's definition
 			elem := new(Element)
 			elem.Type = Macro
 			elem.LineNo = i
-			elem.Attributes, err = parseAttributes(line, []string{"label", "op"})
+			elem.Attributes, err = parseAttributes(line, []string{"op", "label"})
 			if err != nil {
 				return doc, err
 			}
 			// Read ahead as until we find the <!--mweave:end
-			macroBody := []string{}
+			body := []string{}
 			for moreLines(lines) {
 				line, lines, i = nextLine(lines, i)
 				// Bail if with error if we hit the end of file our lines
@@ -202,11 +202,19 @@ func Parse(src []byte) (*Document, error) {
 					// Assemble our Macro and add it to our Macro VM
 					break
 				}
-				macroBody = append(macroBody, line)
+				body = append(body, line)
 			}
-			label := elem.GetAttribute("label")
 			op := elem.GetAttribute("op")
-			elem.Value, elem.Err = doc.Macro.Eval(label+" :"+op+": "+strings.Join(macroBody, "\n"), elem.LineNo)
+			label := elem.GetAttribute("label")
+			if len(op) == 0 {
+				return doc, fmt.Errorf("Macro is missing assignemnt operator (e.g. set, import, etc)", elem.LineNo)
+			}
+			if len(label) == 0 {
+				label = "_"
+			}
+			elem.Label = label
+			elem.Op = op
+			elem.Value = strings.Join(body, "\n")
 			doc.Elements = append(doc.Elements, elem)
 		default:
 			//Create a the next PlainText Element
@@ -231,10 +239,27 @@ func (doc *Document) Weave(out io.Writer) error {
 	return nil
 }
 
-func assemble(m map[string]string) []byte {
+// applyMacros creates a shorthand VM and evaluates the
+// byte array passed in. This adds a Macro ability to mweave
+// hopefully making it more literate in the process :-)
+func applyMacros(lines []string, macros *shorthand.VirtualMachine) ([]byte, error) {
+	macros.SetPrompt("")
+	output := []string{}
+
+	for i, line := range lines {
+		if s, err := macros.Eval(line, i); err == nil {
+			output = append(output, s)
+		} else {
+			return nil, err
+		}
+	}
+	return []byte(strings.Join(output, "\n")), nil
+}
+
+func assemble(m map[string]string, macros *shorthand.VirtualMachine) ([]byte, error) {
 	var (
 		keys      []string
-		buf       []byte
+		buf       []string
 		skip      bool
 		shiftLeft bool
 	)
@@ -242,7 +267,6 @@ func assemble(m map[string]string) []byte {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
-	//last := len(keys) - 1
 	for _, key := range keys {
 		if val, ok := m[key]; ok == true {
 			for _, s := range strings.Split(val, "\n") {
@@ -259,12 +283,12 @@ func assemble(m map[string]string) []byte {
 				if skip {
 					skip = false
 				} else {
-					buf = append(buf, []byte(s+"\n")...)
+					buf = append(buf, s)
 				}
 			}
 		}
 	}
-	return buf
+	return applyMacros(buf, macros)
 }
 
 func getAttribute(attrs []xml.Attr, key string) (string, bool) {
@@ -332,7 +356,11 @@ func (doc *Document) Tangle() error {
 	}
 	// assemble the tangled docs
 	for fName, parts := range tdocs {
-		err := ioutil.WriteFile(fName, assemble(parts), 0664)
+		src, err := assemble(parts, doc.Macro)
+		if err != nil {
+			return fmt.Errorf("error writing %s, %s", fName, err)
+		}
+		err = ioutil.WriteFile(fName, src, 0664)
 		if err != nil {
 			return fmt.Errorf("error writing %s, %s", fName, err)
 		}

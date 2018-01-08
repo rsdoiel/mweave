@@ -8,4 +8,3 @@ This is an example of an embedded document to be extracted by
     print("Hello World!")
 ```
 <!--mweave:end -->
-
