@@ -7,7 +7,7 @@ PROJECT = mweave
 
 MOTTO = "An experimental literate programming tool"
 
-VERSION = $(shell grep -m 1 'Version =' mweave.go | cut -d\" -f 2)
+VERSION = $(shell grep -m 1 'Version =' mweave.go | cut -d\` -f 2)
 
 BRANCH = $(shell git branch | grep '* ' | cut -d\  -f 2)
 
@@ -24,11 +24,12 @@ build: $(CLI_NAMES) README.md
 
 mweave: bin/mweave$(EXT)
 
-bin/mweave$(EXT): mweave.go cmd/mweave/mweave.go
+bin/mweave$(EXT): mweave.go  cmd/mweave/mweave.go
 	env CGO_ENABLED=0 go build -o bin/mweave$(EXT) cmd/mweave/mweave.go
 
 README.md: bin/mweave$(EXT) README.mweave
 	./bin/mweave -weave -i README.mweave -o README.md
+	git add README.md
 
 test:
 	go test
@@ -52,7 +53,7 @@ clean:
 generate_usage_pages: mweave
 	bash gen-usage-pages.bash
 
-website:
+website: generate_usage_pages README.md
 	bash mk-website.bash
 
 publish: generate_usage_pages

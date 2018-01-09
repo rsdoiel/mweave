@@ -58,7 +58,6 @@ would give you the final [helloworld](demos/helloworld.html) page.
 
 Here is the example mweave file--
 
-<!--mweave:source "demos/helloworld.mweave" 0 -->
 ```
     # Hello World!
 
@@ -71,7 +70,6 @@ Here is the example mweave file--
     ```
     <!--mweave:end -->
 ```
-<!--mweave:end -->
 
 Here are the commands to render [helloworld.md](demos/helloworld.md) and [helloworld.py](demos/helloworld.py)
 from our [helloworld.mweave](demos/helloworld.mweave) source.
@@ -124,4 +122,5 @@ _mweave_ is "go get"-able.
 ```shell
     go get -u github.com/rsodiel/mweave/...
 ```
+
 

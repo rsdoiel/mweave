@@ -1,0 +1,10 @@
+@now :!: echo -n $(date +%F)
+
+# Exploring Shorthand in MWeave
+
+By R. S. Doiel, @now
+
+This is an example of testing [shorthand](https://rsdoiel.github.io/shorthand) macros inside
+a [mweave](https://rsdoiel.github.io/mweave) document. 
+
+

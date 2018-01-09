@@ -1,27 +1,10 @@
 #
-# NodeJS ignores
+# Golang ignores
 #
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-
-pids
-logs
-results
-
-npm-debug.log
-
-# Project Ignores
-node_modules/*
-package-lock.json
 
 # Binaries for programs and plugins
 *.exe
+*.exe~
 *.dll
 *.so
 *.dylib
@@ -32,16 +15,14 @@ package-lock.json
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
-.glide/
-
 #
-# Golang ignores
+# Project level ignores
 #
 
-# Project ignores
 *~
 *.swp
 bin/
 dist/
 testout/
+IDEAS.html
+TODO.html
