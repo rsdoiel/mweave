@@ -6,7 +6,9 @@ Donald Knuth's ideas about [literate programming](https://en.wikipedia.org/wiki/
 but didn't wish to write in TeX.  Today I mostly write documents 
 in an extended version of Markdown or in the case of screenplay's Fountain.
 While TeX (and particularly LaTeX) remain really cool in my thinking I just find
-it easier to type and proof read in a simpler form of markup.
+it easier to type and proof read in a simpler form of markup. I am starting the
+experiment again to see if a simple L.P. tool would make sense for writing 
+interactive fiction.
 
 ## History
 
