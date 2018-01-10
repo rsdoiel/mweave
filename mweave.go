@@ -104,9 +104,9 @@ func parseAttributes(src string, attributes []string) ([]xml.Attr, error) {
 		attrs []xml.Attr
 		s     scanner.Scanner
 	)
-	// Trim off <!--mweave:source, <!--mweave:macro and -->
+	// Trim off <!--mweave:source, <!--mweave:shorthand and -->
 	src = strings.TrimPrefix(src, "<!--mweave:source ")
-	src = strings.TrimPrefix(src, "<!--mweave:macro ")
+	src = strings.TrimPrefix(src, "<!--mweave:shorthand ")
 	src = strings.TrimSuffix(src, " -->")
 
 	s.Init(strings.NewReader(src))
@@ -181,7 +181,7 @@ func Parse(src []byte) (*Document, error) {
 			}
 			elem.Value = strings.Join(body, "\n")
 			doc.Elements = append(doc.Elements, elem)
-		case strings.HasPrefix(line, "<!--mweave:macro"):
+		case strings.HasPrefix(line, "<!--mweave:shorthand"):
 			// Setup to add our macro's definition
 			elem := new(Element)
 			elem.Type = Macro

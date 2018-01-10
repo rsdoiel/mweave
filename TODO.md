@@ -7,6 +7,7 @@
 
 ## Next
 
++ [ ] Decide if `<!--meave:shorthand` evaluation is trigger only in tangle or weave, or both
 + [ ] Build out test coverage
 + [ ] Integrate [shorthand](https://github.com/rsdoiel/shorthand) as mweave's macro system
     + [x] shorthand should be a cli option and execute before mweave.Parse() if selected

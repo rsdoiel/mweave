@@ -3,12 +3,12 @@
 
 _mweave_ is a literate programming experiment I started by in 2012. I liked
 Donald Knuth's ideas about [literate programming](https://en.wikipedia.org/wiki/Literate_programming)
-but didn't wish to write in TeX.  Today I mostly write documents 
+but didn't enjoy the implementations I had available. Today I mostly write documents 
 in an extended version of Markdown or in the case of screenplay's Fountain.
-While TeX (and particularly LaTeX) remain really cool in my thinking I just find
-it easier to type and proof read in a simpler form of markup.  I am restarting the
-experiment again to see if a simple L.P. tool would make sense for writing 
-interactive fiction.
+While TeX (and particularly LaTeX) remain really cool in my thinking I prefer editing
+in a simpler form of markup. I am restarting the experiment again to see if a simple 
+L.P. tool would make sense in creating [interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction).
+
 
 ## History
 
@@ -19,18 +19,18 @@ for NodeJS's in JavaScript. While I thought of it as "literate programming" what
 I implemented was really just an inside out document generator.  Code blocks that were
 preceeded by a link were scraped and written to a file indicated by the targetted link.
 I did not use the concepts of "tangle" and "weave" individually and I didn't
-support the arbitrary ordering of code blocks when generating files. 
-I had no macro support.
+support the arbitrary ordering of code blocks or macros.
 
 My bootstrap was written in Bash, it processed the README.md file using _vi_, _sed_, 
-to generate a *mw-bootstrap.js* and then that processed a file to implement _mw.js_ 
-and _npm_ to assemble dependencies.  In the end my initial experiment failed because 
+to generate a *mw-bootstrap.js* and then that processed a file, _mw.md_ to implement 
+_mw.js_ and _npm_ to assemble dependencies.  In the end my initial experiment failed because 
 I failed to use _mw.js_ on a regular basis.  It wasn't compelling.  The version number 
-at npmjs.org shows 0.0.2.  
+at npmjs.org shows 0.0.2. I've sense flagged it as deprecated.
 
-While it was a fun thing to write and think about I moved on delving into other projects and 
-languages after 2013.  Of course cool things like [Jupyter Notebooks](https://jupyter.org/) 
-happened while this experiment languished.
+While it was a fun thing to write and think about I moved on to other projects
+Of course cool things like [Jupyter Notebooks](https://jupyter.org/) 
+happened while this experiment languished. _wmeave_ is inspired in part by watching
+scientists use Jupyter Notebooks in Open Science.
 
 
 ### mweave in January, 2018
