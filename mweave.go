@@ -47,11 +47,12 @@ const (
 )
 
 type Document struct {
-	XMLName  xml.Name                  `json:"-"`
-	DocType  string                    `xml:"type,attr,omitempty" json:"doc_type,omitempty"`
-	Version  string                    `xml:"version,attr,omitempty" json:"version,omitempty"`
-	Elements []*Element                `xml:"elements>element,omitempty" json:"elements,omitempty"`
-	Macro    *shorthand.VirtualMachine `xml:"-" json:"-"`
+	XMLName   xml.Name                  `json:"-"`
+	DocType   string                    `xml:"type,attr,omitempty" json:"doc_type,omitempty"`
+	Version   string                    `xml:"version,attr,omitempty" json:"version,omitempty"`
+	Elements  []*Element                `xml:"elements>element,omitempty" json:"elements,omitempty"`
+	Macro     *shorthand.VirtualMachine `xml:"-" json:"-"`
+	LastIndex int
 }
 
 type Element struct {
@@ -140,6 +141,11 @@ func nextLine(s []string, i int) (string, []string, int) {
 	return "", []string{}, i
 }
 
+func (doc *Document) NextIndex() int {
+	doc.LastIndex++
+	return doc.LastIndex
+}
+
 func Parse(src []byte) (*Document, error) {
 	var (
 		err  error
@@ -150,6 +156,7 @@ func Parse(src []byte) (*Document, error) {
 	doc.DocType = "mweave"
 	doc.Version = Version
 	doc.Macro = shorthand.New()
+	doc.LastIndex = 0
 
 	//NOTE: This is a naive implementation based on analysing individual lines.
 	lines := strings.Split(string(src), "\n")
@@ -306,12 +313,12 @@ func (doc *Document) Tangle() error {
 			if ok == false {
 				return fmt.Errorf("missing doc name for mweave:source at line %d", elem.LineNo)
 			}
-			index, ok = getAttribute(elem.Attributes, "index")
-			if ok == false {
-				return fmt.Errorf("missing doc index for mweave:source at line %d", elem.LineNo)
-			}
+			index, _ = getAttribute(elem.Attributes, "index")
 			// NOTE: we need to left pad index with zero since we're
 			// going to need to sort the string eventually.
+			if index == "" {
+				index = fmt.Sprintf("%d", doc.NextIndex())
+			}
 			if i, err := strconv.Atoi(index); err == nil {
 				index = fmt.Sprintf("%010d", i)
 			} else {

@@ -10,6 +10,7 @@ Converting from NodeJS to Goland:
 + option to generate "front matter" for markdown and source code
 + option to handle "front matter" like fountain
 + option to render AST of mweave for external precessing
++ explicit support for weave,tangle and macros via Shorthand
 
 
 Some feature ideas:
