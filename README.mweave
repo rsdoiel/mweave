@@ -4,24 +4,11 @@
 _mweave_ is a *literate programming* experiment I started by in 2012. I liked
 Donald Knuth's ideas about [literate programming](https://en.wikipedia.org/wiki/Literate_programming)
 but didn't enjoy the implementations I had available. I was also looking at it from
-a programming project perspective.  Today I am looking at *literate program* not
-for the purpose of writing maintainable programs but from the point of view of
-finding a set of tools I like for creative writing projects. The origins of
-*leterate programming* and creative explorations such as 
-[interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction) might
-seem an unlikely pairing but I suspect I will find some interesting synergies
-in approach that may prove useful in 
-[electronic literature](https://en.wikipedia.org/wiki/Electronic_literature) more
+a programming project perspective.  In this incarnation of my experiment I am looking 
+at *literate programming* from the perspective of a _writing tool_ for creative
+projects such as [interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction) 
+and [electronic literature](https://en.wikipedia.org/wiki/Electronic_literature) more
 generally.
-
-Historically electronic literature, weather in the form of games, text adventures
-or eBooks, have tended to be limitted by their specific set of authoring tools.
-Taking a more generic literate programming approach might help breaking through the
-limitations of creating with specific authoring tools or with specific 
-[DSL](https://en.wikipedia.org/wiki/Domain-specific_language)
-created for the purpose of currating game content or text adventures. Time will tell
-if I finish this experiment with anything useful.
-
 
 ## mweave experiment history
 
