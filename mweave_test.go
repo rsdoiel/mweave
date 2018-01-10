@@ -51,4 +51,5 @@ This is an example of an embedded document to be extracted by
 		t.Errorf("Parse failed, %s", err)
 	}
 
+	t.Errorf("Need to write test to review parsed Document's elements")
 }
