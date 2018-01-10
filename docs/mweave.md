@@ -14,19 +14,20 @@ than TeX.
 ## OPTIONS
 
 ```
-    -ast, -json               write out the AST of parsing the mweave file as JSON
     -examples                 display examples
     -generate-markdown-docs   generate Markdown documentation
     -h, -help                 display help
     -i, -input                set input filename (the mweave file)
+    -json                     write mweave doc as JSON
     -l, -license              display license
+    -macros                   preprocess shorthand macros
     -nl, -newline             add a trailing newline
     -o, -output               set output filename
     -quiet                    suppress error messages
     -t, -tangle               generate source code files (e.g. program code)
     -v, -version              display version
     -w, -weave                generate documentations files (e.g. Markdown output)
-    -xml                      write out the AST of parsing the mweave file as JSON
+    -xml                      write mweave doc as XML
 ```
 
 
@@ -50,4 +51,4 @@ display mweave parse results as JSON
 	mweave -i document.mweave -xml
 
 
-mweave v0.1.0
+mweave v0.1.1

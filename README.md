@@ -1,18 +1,31 @@
 
 # mweave
 
-_mweave_ is a literate programming experiment I started by in 2012. I liked
+_mweave_ is a *literate programming* experiment I started by in 2012. I liked
 Donald Knuth's ideas about [literate programming](https://en.wikipedia.org/wiki/Literate_programming)
-but didn't enjoy the implementations I had available. Today I mostly write documents 
-in an extended version of Markdown or in the case of screenplay's Fountain.
-While TeX (and particularly LaTeX) remain really cool in my thinking I prefer editing
-in a simpler form of markup. I am restarting the experiment again to see if a simple 
-L.P. tool would make sense in creating [interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction).
+but didn't enjoy the implementations I had available. I was also looking at it from
+a programming project perspective.  Today I am looking at *literate program* not
+for the purpose of writing maintainable programs but from the point of view of
+finding a set of tools I like for creative writing projects. The origins of
+*leterate programming* and creative explorations such as 
+[interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction) might
+seem an unlikely pairing but I suspect I will find some interesting synergies
+in approach that may prove useful in 
+[electronic literature](https://en.wikipedia.org/wiki/Electronic_literature) more
+generally.
+
+Historically electronic literature, weather in the form of games, text adventures
+or eBooks, have tended to be limitted by their specific set of authoring tools.
+Taking a more generic literate programming approach might help breaking through the
+limitations of creating with specific authoring tools or with specific 
+[DSL](https://en.wikipedia.org/wiki/Domain-specific_language)
+created for the purpose of currating game content or text adventures. Time will tell
+if I finish this experiment with anything useful.
 
 
-## History
+## mweave experiment history
 
-### Where mweave started 2012
+### mweave started 2012
 
 This project started out as an experiment to write a document generator written
 for NodeJS's in JavaScript. While I thought of it as "literate programming" what
