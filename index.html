@@ -13,12 +13,10 @@
 
 <p><em>mweave</em> is a <em>literate programming</em> experiment I started by in 2012. I liked
 Donald Knuth&rsquo;s ideas about <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a>
-but didn&rsquo;t enjoy the implementations I had available. I was also looking at it from
-a programming project perspective.  In this incarnation of my experiment I am looking
-at <em>literate programming</em> from the perspective of a <em>writing tool</em> for creative
-projects such as <a href="https://en.wikipedia.org/wiki/Interactive_fiction">interactive fiction</a>
-and <a href="https://en.wikipedia.org/wiki/Electronic_literature">electronic literature</a> more
-generally.</p>
+but didn&rsquo;t enjoy the implementations. This incarnation of my experiment (2018)
+I am looking at <em>literate programming</em> from the perspective of a <em>writing tool</em>
+for creative projects in <a href="https://en.wikipedia.org/wiki/Interactive_fiction">interactive fiction</a>
+and <a href="https://en.wikipedia.org/wiki/Electronic_literature">electronic literature</a>.</p>
 
 <h2>mweave experiment history</h2>
 
@@ -35,12 +33,13 @@ support the arbitrary ordering of code blocks or macros.</p>
 to generate a <em>mw-bootstrap.js</em> and then that processed a file, <em>mw.md</em> to implement
 <em>mw.js</em> and <em>npm</em> to assemble dependencies.  In the end my initial experiment failed because
 I failed to use <em>mw.js</em> on a regular basis.  It wasn&rsquo;t compelling.  The version number
-at npmjs.org shows 0.0.2. I&rsquo;ve sense flagged it as deprecated.</p>
+at npmjs.org shows 0.0.2. I&rsquo;ve since flagged it as deprecated. I am no longer developing
+a NodeJS based implementation.</p>
 
-<p>While it was a fun thing to write and think about I moved on to other projects
-Of course cool things like <a href="https://jupyter.org/">Jupyter Notebooks</a>
-happened while this experiment languished. <em>wmeave</em> is inspired in part by watching
-scientists use Jupyter Notebooks in Open Science.</p>
+<p>If you&rsquo;re looking for something practicle two interesting projects capture what I was
+thinking about. They are <a href="https://jupyter.org/">Jupyter Notebooks</a>  and <a href="https://github.com/rstudio/rmarkdown">R Notebooks</a>.
+Both have grown out of the <a href="https://en.wikipedia.org/wiki/Open_science">Open Science</a> and
+<a href="https://en.wikipedia.org/wiki/Open_data">Open Data</a> communities. Very cool stuff.</p>
 
 <h3>mweave in January, 2018</h3>
 
@@ -50,13 +49,19 @@ We&rsquo;ll see if this moves beyond a toy program in the coming years. RSD, 201
 
 <h2>The experiment</h2>
 
+<pre><code>Can _mweave_ be a useful tool for writing interactive fiction?  
+</code></pre>
+
 <p><em>mweave</em> is a Golang package and command line program. It provides both &ldquo;tangle&rdquo; and
-&ldquo;weave&rdquo; functions that are expected in literate programming tools today. An <em>mweave</em>
-file is presumed to be a UTF-8 plain text file with an extension of &ldquo;.mweave&rdquo; or &ldquo;.mw&rdquo;.
-Documentation is rendered to Markdown file(s) and source to the specified source code files.
-It is still one command but by picking the <code>-weave</code> or <code>-tangle</code> options you can generate
-both documentation (e.g. Markdown output) and source code file(s).
-At it&rsquo;s core <em>mweave</em> is a pre-processor that looks for <em>mweave</em> directives. Unlike the 2012
+&ldquo;weave&rdquo; functions.  The <em>mweave</em> command line program integrates macro support by
+pre-processing the text through <a href="https://rsdoiel.github.io/shorthand">shorthand</a> a
+very simple label expander. An <em>mweave</em> file is a UTF-8 plain text file with an
+extension of &ldquo;.mweave&rdquo; or &ldquo;.mw&rdquo;.  Documentation is rendered to Markdown file(s)
+and source to the specified source code files. Like the original project <em>mweave</em>
+is still one command but the explicit options of <code>-weave</code> or <code>-tangle</code> are now
+included so you can generate both markdown and source code files.</p>
+
+<p>At it&rsquo;s core <em>mweave</em> is a pre-processor that looks for <em>mweave</em> directives. Unlike the 2012
 version <em>mweave</em> directives are embedded as an HTML/XML style comments.</p>
 
 <h3>Hello World</h3>
@@ -91,30 +96,22 @@ mweave begin directive.</p>
 
 <h3>How it works</h3>
 
-<p><em>mweave</em> reads in the entire source document splitting it up based on the directives it encounters.
-There are three directives - <em>mweave:source</em>, <em>mweave:macro</em> and <em>mweave:end</em>.  <em>mweave:source</em>
-takes two required parameters, the filename (string) and an order value (an integer). The ordering
-value is used by tangle to order blocks of texts associated with the filename. <em>mweave:macro</em>
-takes two parameters one is a label string and the other is a macro (shorthand) op. The last is
-<em>mweave:end</em> which takes no parameter.  Currently I have no other directives planned. I am
-considering integrating <a href="https://github.com/rsdoiel/shorthand">shorthand</a> as the macro system
-sometime in the future.  The <em>mweave</em> directives are expected to be the first non-space element
-on the line.  They take up a whole line.</p>
+<p><em>mweave</em> reads in the entire source document and runs through the <em>shorthand</em> macro expander. It then
+splits the document into plain text sections and source sections.  Source sections start with
+<em>mweave:source</em> and end with a <em>mweave:end</em> HTML style comment.  <em>mweave:source</em> takes two required
+parameters, the filename (string) and an order value (an integer). The ordering value is used by
+tangle to order blocks of texts associated with the filename.</p>
+
+<p>Before parsing into source and plain text blocks the <a href="https://rsdoiel.github.io/shorthand">shorthand</a>
+macro processor runs over the code and the resulting text is then parsed into source and plain text.
+See <a href="https://rsdoiel.github.io/rsdoiel/shorthand/docs">shorthand</a> for details about <em>shorthand</em>.</p>
 
 <p>This 2nd <em>mweave</em> experiment is still rediculiously simple like 2012. v0.1.0 was I implemented
-in less than a day so I could experiment again with literate programming. v0.1.1, integrating
-a macro system was another day (though the macro engine already existed). I am trying to sort out how
-simple a tool I can write and still support literate programming. My hypothis is that if the
-tool is simple enough I might actually use it and find it more useful and interesting to maintain.</p>
-
-<h3>The macro system in v0.1.1</h3>
-
-<p><em>mweave</em> (v0.1.1) now has en experimental macro system. The macro system is
-<a href="https://rsdoiel.github.io/shorthand">shorthand</a>. Shorthand provides additional
-functionality like including other files, running shell processes, running Markdown
-processors, evaluting other other shorthand files. The experiment will not see
-if the two mweave directives plus shorthand gives us a useful platform for doing literate
-development.</p>
+in less than a day so I could experiment again with literate programming using the HTML comment
+indicator for flag source files to output. v0.1.1 integrated a macro system was another day
+(though the macro engine already existed). I am trying to sort out how simple a tool I can write
+and still support literate programming. My hypothis is that if the tool is simple enough I might
+actually use it and find it more useful and interesting to maintain.</p>
 
 <h2>Requirements</h2>
 

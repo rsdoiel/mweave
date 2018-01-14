@@ -42,16 +42,13 @@ const (
 	// Constants used to identify type
 	PlainText = iota
 	Source
-	Macro
-	End
 )
 
 type Document struct {
-	XMLName   xml.Name                  `json:"-"`
-	DocType   string                    `xml:"type,attr,omitempty" json:"doc_type,omitempty"`
-	Version   string                    `xml:"version,attr,omitempty" json:"version,omitempty"`
-	Elements  []*Element                `xml:"elements>element,omitempty" json:"elements,omitempty"`
-	Macro     *shorthand.VirtualMachine `xml:"-" json:"-"`
+	XMLName   xml.Name   `json:"-"`
+	DocType   string     `xml:"type,attr,omitempty" json:"doc_type,omitempty"`
+	Version   string     `xml:"version,attr,omitempty" json:"version,omitempty"`
+	Elements  []*Element `xml:"elements>element,omitempty" json:"elements,omitempty"`
 	LastIndex int
 }
 
@@ -74,10 +71,6 @@ func (elem *Element) MarshalJSON() ([]byte, error) {
 		m["_type"] = "text/plain"
 	case Source:
 		m["_type"] = "directive/source"
-	case End:
-		m["_type"] = "directive/end"
-	case Macro:
-		m["_type"] = "directive/macro"
 	default:
 		m["_type"] = "Unknown"
 	}
@@ -94,10 +87,20 @@ func (elem *Element) MarshalJSON() ([]byte, error) {
 func (elem *Element) GetAttribute(s string) string {
 	for _, attr := range elem.Attributes {
 		if attr.Name.Local == s {
-			return attr.Value
+			return strings.Trim(attr.Value, "\"")
 		}
 	}
 	return ""
+}
+
+func (elem *Element) AsSymbol() shorthand.SourceMap {
+	return shorthand.SourceMap{
+		Op:       fmt.Sprintf(":%s:", elem.Op),
+		Label:    elem.Label,
+		Source:   elem.Value,
+		Expanded: "",
+		LineNo:   elem.LineNo,
+	}
 }
 
 func parseAttributes(src string, attributes []string) ([]xml.Attr, error) {
@@ -105,9 +108,9 @@ func parseAttributes(src string, attributes []string) ([]xml.Attr, error) {
 		attrs []xml.Attr
 		s     scanner.Scanner
 	)
-	// Trim off <!--mweave:source, <!--mweave:shorthand and -->
+	// Trim off <!--mweave:source, <!--mweave:end -->
 	src = strings.TrimPrefix(src, "<!--mweave:source ")
-	src = strings.TrimPrefix(src, "<!--mweave:shorthand ")
+	src = strings.TrimPrefix(src, "<!--mweave:end ")
 	src = strings.TrimSuffix(src, " -->")
 
 	s.Init(strings.NewReader(src))
@@ -155,7 +158,6 @@ func Parse(src []byte) (*Document, error) {
 	doc := new(Document)
 	doc.DocType = "mweave"
 	doc.Version = Version
-	doc.Macro = shorthand.New()
 	doc.LastIndex = 0
 
 	//NOTE: This is a naive implementation based on analysing individual lines.
@@ -181,46 +183,11 @@ func Parse(src []byte) (*Document, error) {
 					return doc, fmt.Errorf("Source starting at %d missing <!--mweave:end -->", elem.LineNo)
 				}
 				if strings.HasPrefix(line, "<!--mweave:end") == true {
-					// Assemble our Macro and add it to our Macro VM
+					// Assemble our Source add element
 					break
 				}
 				body = append(body, line)
 			}
-			elem.Value = strings.Join(body, "\n")
-			doc.Elements = append(doc.Elements, elem)
-		case strings.HasPrefix(line, "<!--mweave:shorthand"):
-			// Setup to add our macro's definition
-			elem := new(Element)
-			elem.Type = Macro
-			elem.LineNo = i
-			elem.Attributes, err = parseAttributes(line, []string{"op", "label"})
-			if err != nil {
-				return doc, err
-			}
-			// Read ahead as until we find the <!--mweave:end
-			body := []string{}
-			for moreLines(lines) {
-				line, lines, i = nextLine(lines, i)
-				// Bail if with error if we hit the end of file our lines
-				if moreLines(lines) == false {
-					return doc, fmt.Errorf("Macro starting at %d missing <!--mweave:end -->", elem.LineNo)
-				}
-				if strings.HasPrefix(line, "<!--mweave:end") == true {
-					// Assemble our Macro and add it to our Macro VM
-					break
-				}
-				body = append(body, line)
-			}
-			op := elem.GetAttribute("op")
-			label := elem.GetAttribute("label")
-			if len(op) == 0 {
-				return doc, fmt.Errorf("Macro is missing assignemnt operator (e.g. set, import, etc)", elem.LineNo)
-			}
-			if len(label) == 0 {
-				label = "_"
-			}
-			elem.Label = label
-			elem.Op = op
 			elem.Value = strings.Join(body, "\n")
 			doc.Elements = append(doc.Elements, elem)
 		default:
@@ -229,6 +196,7 @@ func Parse(src []byte) (*Document, error) {
 			elem.Type = PlainText
 			elem.LineNo = i
 			elem.Value = line
+			//FIXME: thjis should really progress to the next non-plain text block
 			doc.Elements = append(doc.Elements, elem)
 		}
 	}
@@ -246,7 +214,7 @@ func (doc *Document) Weave(out io.Writer) error {
 	return nil
 }
 
-func assemble(m map[string]string, macros *shorthand.VirtualMachine) ([]byte, error) {
+func assemble(m map[string]string) []byte {
 	var (
 		keys      []string
 		buf       []string
@@ -278,7 +246,7 @@ func assemble(m map[string]string, macros *shorthand.VirtualMachine) ([]byte, er
 			}
 		}
 	}
-	return macros.Apply([]byte(strings.Join(buf, "\n")), false)
+	return []byte(strings.Join(buf, "\n"))
 }
 
 func getAttribute(attrs []xml.Attr, key string) (string, bool) {
@@ -346,11 +314,10 @@ func (doc *Document) Tangle() error {
 	}
 	// assemble the tangled docs
 	for fName, parts := range tdocs {
-		src, err := assemble(parts, doc.Macro)
-		if err != nil {
-			return fmt.Errorf("error writing %s, %s", fName, err)
-		}
-		err = ioutil.WriteFile(fName, src, 0664)
+		// Assemble the parts
+		src := assemble(parts)
+		// Write out results
+		err := ioutil.WriteFile(fName, src, 0664)
 		if err != nil {
 			return fmt.Errorf("error writing %s, %s", fName, err)
 		}

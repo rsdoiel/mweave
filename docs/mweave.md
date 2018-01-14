@@ -7,8 +7,9 @@
 
 
 mweave is and experimental literate programming tool. It is 
-inspired by Knuth's ideas targeting Markdown like markup rather
-than TeX.
+inspired by Knuth's but much simplier and with the primary
+purpose of creating a platform for writing interactive 
+function (e.g. Adventure like text games).
 
 
 ## OPTIONS
@@ -44,11 +45,11 @@ generate documentation from an mweave document
 
 display mweave parse results as XML
 
-	mweave -i document.mweave -xml
+    mweave -i document.mweave -xml
 
 display mweave parse results as JSON
 
-	mweave -i document.mweave -xml
+    mweave -i document.mweave -xml
 
 
 mweave v0.1.1

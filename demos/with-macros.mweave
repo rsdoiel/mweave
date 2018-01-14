@@ -1,4 +1,4 @@
-@now :!: echo -n $(date +%F)
+:bash: @now echo -n $(date +%F)
 
 # Exploring Shorthand in MWeave
 
