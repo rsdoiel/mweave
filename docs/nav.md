@@ -2,7 +2,7 @@
 + [HOME](/)
 + [README](../)
 + [LICENSE](../license.html)
-+ [Install](../install.html)
 + [Documentation](./)
++ [Install](../install.html)
 + [Github](https://github.com/rsdoiel/mweave)
 
